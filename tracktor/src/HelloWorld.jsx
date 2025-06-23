@@ -38,7 +38,7 @@ function App() {
 
   return (
     <div>
-      <h1>Username's Projects:</h1>
+      <h1>Hello World!</h1>
       <h2>This is my first website</h2>
       <h2>Goals:</h2>
       <List list = {goals} /> 
