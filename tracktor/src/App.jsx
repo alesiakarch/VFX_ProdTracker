@@ -1,49 +1,26 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
+import {HashRouter as Router, Routes, Route} from 'react-router-dom'
+import {LandingPage} from './pages/landing_page.jsx'
+import {CreateProjectPage} from './pages/create_project_page.jsx'
+import { ProjectPage } from './pages/project_page.jsx'
+import { Layout } from './pages/Layout.jsx'
 
-function ListItem(props) {
-  return (
-  <li>
-    {props.text} {props.IsDone && "✅"}
-  </li>
-  )
-}
-
-function List(props) {
-  return (
-    <ul>
-      {props.list.map((item, index) => {
-        return <ListItem key={index}
-         text={item.text}
-         IsDone={item.IsDone} />;
-      })}
-    </ul>
-  );
-}
 
 function App() {
-  const [count, setCount] = useState(0)
-  const goals = [{text: "Make a Hello World webpage", IsDone: true},
-                 {text:  "Learn React", IsDone: false},
-                 {text: "Figure out the rest", IsDone: false}
-                ]
-  const food = [{text: "Pizza", IsDone: true},
-                {text: "Sushi", IsDone: false},
-                {text: "Chips", IsDone: false},
-                {text: "Honey Pork", IsDone: true}
-              ]
-  
 
-  return (
-    <div>
-      <h1>Username's Projects:</h1>
-      <h2>This is my first website</h2>
-      <h2>Goals:</h2>
-      <List list = {goals} /> 
-    </div>
-  )
+    return (
+        <Router> 
+            <Routes>
+                <Route element={<Layout/>}>
+                    <Route path="/" element={<LandingPage/>} />
+                    <Route path="/create-project" element={<CreateProjectPage/>} />
+                    <Route path="/project-name" element={<ProjectPage/>} />
+                </Route>
+
+            </Routes>
+        </Router>
+    )
+  
 }
 
 export default App
