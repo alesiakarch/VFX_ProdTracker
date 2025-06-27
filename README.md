@@ -10,4 +10,6 @@ Change the name! (later)
 Tech stack:
 Node.js
 Vite
+React
 JavaScript
+Tailwindcss
