@@ -1,13 +1,13 @@
 import { useState } from "react"
 
 
-export function Textbox({className}) {
+export function Textbox({className, value, onChange}) {
 
     const [text, setText] = useState("")
 
     return (
         <>
-            <input className ={className} onChange={(e) => setText(e.target.value)}></input>
+            <input className ={className} value={value} onChange={onChange}></input>
             <p>{text}</p>
         </>
     )
