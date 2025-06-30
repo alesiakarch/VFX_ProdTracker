@@ -1,5 +1,5 @@
 import './App.css'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import {HashRouter as Router, Routes, Route} from 'react-router-dom'
 import {LandingPage} from './pages/landing_page.jsx'
 import {CreateProjectPage} from './pages/create_project_page.jsx'
@@ -10,19 +10,29 @@ import axios from 'axios'
 
 function App() {
 
-    const [projects, setProjects] = useState("")
-    const [array, setArray] = useState([])
-    const fetchAPI = async() => {
-        const response = await axios.get("http://localhost:8080/api/users");
-        setArray(response.data.users);
-    }
+    const [projects, setProjects] = useState([])
+    const [users, setUsers] = useState([])
+    const fetchData = useCallback(async () => {
+        try {
+            const usersResponse = await axios.get("http://localhost:8080/api/users")
+            setUsers(usersResponse.data.users)
 
-    useEffect(() => {fetchAPI()}, [])
+            const projectsResponse = await axios.get("http://localhost:8080/api/projects")
+            setProjects(projectsResponse.data)
+        } catch (error) {
+            setUsers([])
+            setProjects([])
+        }
+    }, [])
+    useEffect(() => {
+        fetchData()
+    }, [])
+ 
     return (
         <>
         <h1 className="text-3xl font-bold underline text-red-500">Hello Tailwind!</h1>
             {
-            array.map((user, index) => (
+            users.map((user, index) => (
                 <div key={index}>
                 <span>{user}</span>
                 <br></br>
@@ -32,9 +42,9 @@ function App() {
         <Router> 
             <Routes>
                 <Route element={<Layout/>}>
-                    <Route path="/" element={<LandingPage/>} />
+                    <Route path="/" element={<LandingPage projects={projects} reloadProjects={fetchData} />} />
                     <Route path="/create-project" element={<CreateProjectPage projects={projects} setProjects={setProjects}/>} />
-                    <Route path="/project-name" element={<ProjectPage/>} />
+                    <Route path="/projects/:projectId" element={<ProjectPage />} />
                 </Route>
                 
             </Routes>

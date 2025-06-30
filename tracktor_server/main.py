@@ -57,12 +57,29 @@ def create_project():
     new_id = cursor.lastrowid
     conn.close()
 
-
-    
     new_project = {"id": new_id, "name" : name}
 
     print("Current projects:", projects)
     return jsonify(new_project), 201
+
+@app.route("/api/projects/<int:project_id>", methods=['DELETE'])
+def delete_project(project_id):
+    conn = get_db()
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM projects WHERE id = ?", (project_id,))
+    conn.commit()
+    conn.close()
+    return jsonify({"message": "Project deleted"}), 200
+    
+
+@app.route("/api/projects/<int:project_id>", methods=['GET'])
+def get_project(project_id):
+    conn = get_db()
+    row = conn.execute("SELECT * FROM projects WHERE id = ?", (project_id,)).fetchone()
+    conn.close()
+    if row is None:
+        return jsonify({"error": "Project not found"}), 404
+    return jsonify(dict(row))
 
 
 
