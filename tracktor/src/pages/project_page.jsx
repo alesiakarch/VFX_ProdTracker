@@ -36,6 +36,8 @@ export function ProjectPage({ reloadProjects }) {
     return (
         <>
             <h1>Project: {project.name}</h1>
+            <br></br>
+            
             <Button title={"Delete project"} onClick={deleteProject}/>
         </>
     )

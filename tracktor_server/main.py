@@ -14,9 +14,13 @@ def get_db():
 def init_db():
     conn = get_db()
     conn.execute("""
-                    CREATE TABLE IF NOT EXISTS projects(
+                 CREATE TABLE IF NOT EXISTS projects(
                  id INTEGER PRIMARY KEY AUTOINCREMENT, 
-                 name TEXT NOT NULL
+                 name TEXT NOT NULL,
+                 type TEXT NOT NULL,
+                 status TEXT,
+                 shotsNum INTEGER,
+                 deadline TEXT
                  )
                  """)
     conn.commit()
@@ -50,9 +54,13 @@ def create_project():
         return jsonify({"error":"Missing the project's name"}), 400
     
     name = data.get("name")
+    type = data.get("type")
+    status = "New"
+    shotsNum = data.get("shotsNum")
+    deadline = data.get("deadline")
     conn = get_db()
     cursor = conn.cursor()
-    cursor.execute("INSERT INTO projects(name) VALUES(?)", (name,))
+    cursor.execute("INSERT INTO projects(name, type, status, shotsNum, deadline) VALUES(?, ?, ?, ?, ?)", (name,type, status, shotsNum, deadline))
     conn.commit()
     new_id = cursor.lastrowid
     conn.close()

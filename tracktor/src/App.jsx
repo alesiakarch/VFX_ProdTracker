@@ -30,15 +30,6 @@ function App() {
  
     return (
         <>
-        <h1 className="text-3xl font-bold underline text-red-500">Hello Tailwind!</h1>
-            {
-            users.map((user, index) => (
-                <div key={index}>
-                <span>{user}</span>
-                <br></br>
-                </div>
-            ))
-            }
         <Router> 
             <Routes>
                 <Route element={<Layout/>}>
