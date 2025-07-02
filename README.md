@@ -6,17 +6,22 @@ Production tracking tool for VFX projects, supporting multiple users
 This is going to be a short documents outlining the requirements for this project. 
 
 ### Scope:
+
 The aim of the project is to produce a basic production tracking tool. First and foremost, it should aid users in managing and tracking their shot work in a website like manner. 
 Hence, the project can be broken down into two main stages:
+
  - Stage 1: Standalone web-based production tracker, which can offer its basic functionality, but on a manual update basis. 
+
  - Stage 2: Full integration with the DCC tools, using TIK manager. This will allow for the web-app to directly work with the user's DCC and merge tracking directly with their work
 
 MVP is defined as a complete Stage 1.  
 
 ### Users:
+
 This project is aimed at small teams and individuals, working on CGI/film related products, that will benefit from shot-by-shot tracking. 
 
 ### Requirements and functions:
+
     Core functionality: 
         The web app must give the user tools to track their project, which means:
         1. Project creation/deletion cycle [x]
@@ -38,10 +43,10 @@ This project is aimed at small teams and individuals, working on CGI/film relate
         3. Individual version publishing with playblasts/thumbnails
 
 ### Tech stack:
+
     Node.js
     Vite
     React/Javascript
     Tailwindcss
     Flask/Python
     SQLite
-

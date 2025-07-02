@@ -4,7 +4,7 @@ import {HashRouter as Router, Routes, Route} from 'react-router-dom'
 import {LandingPage} from './pages/landing_page.jsx'
 import {CreateProjectPage} from './pages/create_project_page.jsx'
 import { ProjectPage } from './pages/project_page.jsx'
-import { Layout } from './pages/Layout.jsx'
+import { Layout } from './pages/layout.jsx'
 import axios from 'axios'
 
 
