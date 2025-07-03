@@ -51,7 +51,7 @@ class DBMapper:
         """
         Opens the named database or creates one if it doesn't exist
         """
-        connection = sqlite3.connect("projects.db")
+        connection = sqlite3.connect(self.db_name)
         connection.row_factory = sqlite3.Row
         return connection
     

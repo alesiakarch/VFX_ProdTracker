@@ -82,16 +82,16 @@ def delete_project(project_id):
     # cursor.execute("DELETE FROM projects WHERE id = ?", (project_id,))
     # conn.commit()
     # conn.close()
-    db.remove_project()
+    db.remove_project(project_id)
     return jsonify({"message": "Project deleted"}), 200
     
 
 @app.route("/api/projects/<int:project_id>", methods=['GET'])
-def get_project(project_id):
+def display_project(project_id):
     # conn = get_db()
     # row = conn.execute("SELECT * FROM projects WHERE id = ?", (project_id,)).fetchone()
     # conn.close()
-    row = db.get_project()
+    row = db.get_project(project_id)
     if row is None:
         return jsonify({"error": "Project not found"}), 404
     return jsonify(dict(row))
