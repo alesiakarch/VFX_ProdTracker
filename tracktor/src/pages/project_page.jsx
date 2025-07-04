@@ -6,6 +6,7 @@ import { Button } from "../components/Button";
 export function ProjectPage({ reloadProjects }) {
     const { projectId } = useParams()
     const [project, setProject] = useState()
+    const [shot, setShot] = useState()
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -13,6 +14,9 @@ export function ProjectPage({ reloadProjects }) {
             try {
                 const project = await axios.get(`http://localhost:8080/api/projects/${projectId}`)
                 setProject(project.data)
+
+                const shot = await axios.get("/api/shots")
+                setShot(shot.data)
             } catch (error) {
                 setProject(null)
             }
@@ -37,7 +41,6 @@ export function ProjectPage({ reloadProjects }) {
         <>
             <h1>Project: {project.name}</h1>
             <br></br>
-            
             <Button title={"Delete project"} onClick={deleteProject}/>
         </>
     )

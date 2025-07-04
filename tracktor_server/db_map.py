@@ -119,7 +119,7 @@ class DBMapper:
 
     def get_project(self, project_id):
         """
-        Returns all row of the chosen project
+        Returns all columns of the chosen project
         """
         connection = self.get_db()
         row = connection.execute("SELECT * FROM projects WHERE id = ?", (project_id,)).fetchone()
@@ -133,7 +133,7 @@ class DBMapper:
         connection = self.get_db()
         connection.execute("""
                                 CREATE TABLE IF NOT EXISTS shots(
-                                project_id INTEGER PRIMARY KEY AUTOINCREMENT, 
+                                project_id INTEGER, 
                                 shot_id INTEGER PRIMARY KEY AUTOINCREMENT,
                                 shot_name TEXT NOT NULL,
                                 status TEXT,
@@ -142,14 +142,60 @@ class DBMapper:
                                 cfx_status TEXT,
                                 lit_status TEXT
                                 )
-                                """)
+                                """,
+                                )
         connection.commit()
         connection.close()
     
-    def get_shots(self):
+    def get_shots_from_project(self, project_id):
         """
         Get shots to display on the project page
         """
+        connection = self.get_db()
+        shot_rows = connection.execute("SELECT * FROM shots WHERE project_id = ?", (project_id,)).fetchall()
+        return shot_rows
+    
+    def get_shot_from_project(self, project_id, shot_id):
+        """
+        Get all columns of one shot from one project
+        """
+        connection = self.get_db()
+        row = connection.execute("SELECT * FROM shots WHERE project_id = ? AND shot_id = ?", (project_id, shot_id))
+        return row
+    
+    def add_shots_for_project(self, project_id, shotsNum):
+        """
+        Sends off a loop that creates a requested number of shots
+        """
+        connection = self.get_db()
+        cursor = connection.cursor()
+        for i in range(shotsNum):
+            cursor.execute("""
+                            INSERT INTO shots(
+                            project_id, 
+                            shot_id,
+                            shot_name,
+                            status,
+                            lay_status,
+                            anim_status,
+                            cfx_status,
+                            lit_status
+                           )
+                           VALUES(?, ?, ?, ?, ?, ?, ?, ?)
+                           """, (project_id, 
+                                 shot_id,
+                                 shot_name,
+                                 status,
+                                 lay_status,
+                                 anim_status,
+                                 cfx_status,
+                                 lit_status)
+                            )
+            connection.commit()
+            cursor.lastrowid
+        connection.close()
+        
+
 
 
 
