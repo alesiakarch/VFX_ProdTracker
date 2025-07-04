@@ -126,6 +126,31 @@ class DBMapper:
         connection.close()
         return row
 
+    def init_shots_table(self):
+        """
+        Creates and SQL table for shots
+        """
+        connection = self.get_db()
+        connection.execute("""
+                                CREATE TABLE IF NOT EXISTS shots(
+                                project_id INTEGER PRIMARY KEY AUTOINCREMENT, 
+                                shot_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                                shot_name TEXT NOT NULL,
+                                status TEXT,
+                                lay_status TEXT,
+                                anim_status TEXT,
+                                cfx_status TEXT,
+                                lit_status TEXT
+                                )
+                                """)
+        connection.commit()
+        connection.close()
+    
+    def get_shots(self):
+        """
+        Get shots to display on the project page
+        """
+
 
 
     

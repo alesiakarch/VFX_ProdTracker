@@ -29,6 +29,7 @@ def init_db():
     # conn.commit()
     # conn.close()
     db.init_project_table()
+    db.init_shots_table()
     return jsonify({"message" : "Database init complete"})
 # projects = []
 
@@ -95,6 +96,10 @@ def display_project(project_id):
     if row is None:
         return jsonify({"error": "Project not found"}), 404
     return jsonify(dict(row))
+
+@app.route("/api/shots", methods=['GET'])
+def get_shots(project_id):
+    
 
 
 
