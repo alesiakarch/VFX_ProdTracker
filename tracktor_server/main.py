@@ -43,14 +43,14 @@ def create_project():
     shotsNum = data.get("shotsNum")
     deadline = data.get("deadline")
 
-    new_project = db.add_project(name, type, status, shotsNum, deadline)
-    # get project id somehow
+    project_id = db.add_project(name, type, status, shotsNum, deadline)
     new_shot_list = db.add_shots_for_project(project_id, shotsNum)
-    return jsonify(new_project), 201
+    return jsonify({"project_id" : project_id, "project_name": name}), 201
 
 @app.route("/api/projects/<int:project_id>", methods=['DELETE'])
 def delete_project(project_id):
     db.remove_project(project_id)
+    db.remove_shots_for_project(project_id)
     return jsonify({"message": "Project deleted"}), 200
     
 
@@ -62,9 +62,15 @@ def display_project(project_id):
     return jsonify(dict(row))
 
 @app.route("/api/shots", methods=['GET'])
-def existing_shots(project_id):
-    shot_rows = db.get_shot_from_project(project_id)
+def existing_shots():
+    shot_rows = db.get_all_shots()
     return jsonify([dict(shot_row) for shot_row in shot_rows])
+
+@app.route("/api/projects/<int:project_id>/shots", methods=['GET'])
+def display_shots_for_project(project_id):
+    shots = db.get_shots_from_project(project_id)
+    return jsonify([dict(shot) for shot in shots])
+
     
 
 

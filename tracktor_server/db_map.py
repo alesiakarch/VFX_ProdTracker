@@ -105,7 +105,7 @@ class DBMapper:
         connection.close()
 
         new_project = {"id": new_id, "name": name}
-        return new_project
+        return new_id
     
     def remove_project(self, project_id):
         """
@@ -163,17 +163,26 @@ class DBMapper:
         row = connection.execute("SELECT * FROM shots WHERE project_id = ? AND shot_id = ?", (project_id, shot_id))
         return row
     
+    def get_all_shots(self):
+        """
+        Get all columns of one shot from one project
+        """
+        connection = self.get_db()
+        rows = connection.execute("SELECT * FROM shots").fetchall()
+        return rows
+
     def add_shots_for_project(self, project_id, shotsNum):
         """
         Sends off a loop that creates a requested number of shots
         """
         connection = self.get_db()
         cursor = connection.cursor()
+        new_status ="Not Started"
         for i in range(shotsNum):
+            shot_name = f"SHT_{(i+1)*10:04d}"
             cursor.execute("""
                             INSERT INTO shots(
                             project_id, 
-                            shot_id,
                             shot_name,
                             status,
                             lay_status,
@@ -181,18 +190,26 @@ class DBMapper:
                             cfx_status,
                             lit_status
                            )
-                           VALUES(?, ?, ?, ?, ?, ?, ?, ?)
+                           VALUES(?, ?, ?, ?, ?, ?, ?)
                            """, (project_id, 
-                                 shot_id,
                                  shot_name,
-                                 status,
-                                 lay_status,
-                                 anim_status,
-                                 cfx_status,
-                                 lit_status)
+                                 new_status,
+                                 new_status,
+                                 new_status,
+                                 new_status,
+                                 new_status)
                             )
             connection.commit()
-            cursor.lastrowid
+        connection.close()
+
+    def remove_shots_for_project(self, project_id):
+        """
+        Removes all shots from the specified project
+        """
+        connection = self.get_db()
+        cursor = connection.cursor()
+        cursor.execute("DELETE FROM shots WHERE project_id = ?", (project_id,))
+        connection.commit()
         connection.close()
         
 
