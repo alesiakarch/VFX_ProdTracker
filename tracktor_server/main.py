@@ -71,8 +71,15 @@ def display_shots_for_project(project_id):
     shots = db.get_shots_from_project(project_id)
     return jsonify([dict(shot) for shot in shots])
 
-    
-
+@app.route("/api/projects/<int:project_id>/shots/<int:shot_id>", methods = ['PATCH'])
+def change_status(project_id, shot_id):
+    data = request.get_json()
+    status_item = data.get("status_item")
+    value = data.get("value")
+    if not status_item or value is None:
+        return jsonify({"error" : "Missing required components to update the shot"})
+    db.change_shot_status(shot_id, status_item, value)
+    return jsonify({"message" : "Shot updated"})
 
 
 if __name__ == "__main__":

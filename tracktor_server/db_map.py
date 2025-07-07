@@ -211,6 +211,17 @@ class DBMapper:
         cursor.execute("DELETE FROM shots WHERE project_id = ?", (project_id,))
         connection.commit()
         connection.close()
+
+    def change_shot_status(self, shot_id, status_item, new_status):
+        """
+        Changes the status of any dropdown status item, aka LAY, ANI, etc
+        """
+        connection = self.get_db()
+        cursor = connection.cursor()
+        cursor.execute(f"UPDATE shots SET {status_item} = ? WHERE shot_id = ?", (new_status, shot_id))
+        connection.commit()
+        connection.close()
+
         
 
 

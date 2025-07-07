@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { Button } from "../components/Button";
+import { StatusListbox } from "../components/StatusListbox";
 
 export function ProjectPage({ reloadProjects }) {
     const { projectId } = useParams()
@@ -36,6 +37,20 @@ export function ProjectPage({ reloadProjects }) {
         }
     }
 
+    const updateShotField = async(shot_id, field, newStatus) => {
+        try {
+            await axios.patch(`http://localhost:8080/api/projects/${projectId}/shots/${shot_id}`,
+                 {status_item : field, value : newStatus})
+            setShots(shots =>
+                shots.map(shot =>
+                    shot.shot_id === shot_id ? {...shot, [field] : newStatus} : shot
+                )
+            )
+        } catch (error) {
+            alert("Failed to update status")
+        }
+    }
+
     if (project === undefined) return <div>Loading...</div>
     if (project === null) return <div>Project not found</div>
     return (
@@ -59,17 +74,37 @@ export function ProjectPage({ reloadProjects }) {
                     {shots.map((s) => (
                         <tr key={s.shot_id}>
                             <td>{s.shot_name}</td>
-                            <td>{s.status}</td>
-                            <td>{s.lay_status}</td>
-                            <td>{s.anim_status}</td>
-                            <td>{s.cfx_status}</td>
-                            <td>{s.lit_status}</td>
+                            <td>
+                                <StatusListbox value={s.status} 
+                                onChange={newStatus => updateShotField(s.shot_id, "status", newStatus)}
+                                />
+                            </td>
+                            <td>
+                                <StatusListbox value={s.lay_status} 
+                                onChange={newStatus => updateShotField(s.shot_id, "lay_status", newStatus)}
+                                /></td>
+                            <td>
+                                <StatusListbox value={s.anim_status} 
+                                onChange={newStatus => updateShotField(s.shot_id, "anim_status", newStatus)}
+                                />
+                            </td>
+                            <td>
+                                <StatusListbox value={s.cfx_status} 
+                                onChange={newStatus => updateShotField(s.shot_id, "cfx_status", newStatus)}
+                                />    
+                            </td>
+                            <td>
+                                <StatusListbox value={s.status} 
+                                onChange={newStatus => updateShotField(s.shot_id, "status", newStatus)}
+                                />
+                            </td>
                         </tr>
                     ))}
                 </tbody>
             </table>
             ) : (<div>Not shots found for this project</div>
             )}
+            <br></br>
             <Button title={"Delete project"} onClick={deleteProject}/>
         </>
     )
