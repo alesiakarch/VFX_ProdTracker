@@ -1,7 +1,9 @@
+#!/usr/bin/env -S uv run --script
+
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 import sqlite3
-from tracktor_server.db_map import DBMapper
+from db_map import DBMapper
 
 app = Flask(__name__)
 cors = CORS(app, resources={r"/*": {"origins": "*"}}) # specify origins

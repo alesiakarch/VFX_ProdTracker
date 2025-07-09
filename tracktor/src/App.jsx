@@ -5,6 +5,7 @@ import {LandingPage} from './pages/landing_page.jsx'
 import {CreateProjectPage} from './pages/create_project_page.jsx'
 import { ProjectPage } from './pages/project_page.jsx'
 import { Layout } from './pages/layout.jsx'
+import { LoginPage } from './pages/login_page.jsx'
 import axios from 'axios'
 
 
@@ -33,7 +34,8 @@ function App() {
         <Router> 
             <Routes>
                 <Route element={<Layout/>}>
-                    <Route path="/" element={<LandingPage projects={projects} reloadProjects={fetchData} />} />
+                    <Route path ="/usernames-projects" element={<LandingPage projects={projects} reloadProjects={fetchData}/>}/>
+                    <Route path="/" element={<LoginPage />} />
                     <Route path="/create-project" element={<CreateProjectPage projects={projects} setProjects={setProjects}/>} />
                     <Route path="/projects/:projectId" element={<ProjectPage />} />
                 </Route>
