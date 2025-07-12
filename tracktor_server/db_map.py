@@ -153,6 +153,7 @@ class DBMapper:
         """
         connection = self.get_db()
         shot_rows = connection.execute("SELECT * FROM shots WHERE project_id = ?", (project_id,)).fetchall()
+        connection.close()
         return shot_rows
     
     def get_shot_from_project(self, project_id, shot_id):
@@ -160,7 +161,8 @@ class DBMapper:
         Get all columns of one shot from one project
         """
         connection = self.get_db()
-        row = connection.execute("SELECT * FROM shots WHERE project_id = ? AND shot_id = ?", (project_id, shot_id))
+        row = connection.execute("SELECT * FROM shots WHERE project_id = ? AND shot_id = ?", (project_id, shot_id)).fetchone()
+        connection.close()
         return row
     
     def get_all_shots(self):
@@ -169,6 +171,7 @@ class DBMapper:
         """
         connection = self.get_db()
         rows = connection.execute("SELECT * FROM shots").fetchall()
+        connection.close()
         return rows
 
     def add_shots_for_project(self, project_id, shotsNum):
