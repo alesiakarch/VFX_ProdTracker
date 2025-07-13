@@ -3,17 +3,21 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 import sqlite3
-from tracktor_server.db_map import DBMapper
+from tracktor_server.projects_db_map import ProjectsDBMapper
+from tracktor_server.shots_db_map import ShotsDBMapper
+from tracktor_server.users_db_map import UsersDBMapper
 
 app = Flask(__name__)
 cors = CORS(app, resources={r"/*": {"origins": "*"}}) # specify origins
 
-db = DBMapper()
+db_path = "tracktor.db"
+projects_table = ProjectsDBMapper(db_path)
+shots_table = ShotsDBMapper(db_path)
 
 @app.route("/init", methods = ['GET'])
 def init_db():
-    db.init_project_table()
-    db.init_shots_table()
+    projects_table.init_project_table()
+    shots_table.init_shots_table()
     return jsonify({"message" : "Database init complete"})
 
 @app.route("/api/users", methods =['GET'])
@@ -30,7 +34,7 @@ def users():
 
 @app.route("/api/projects", methods=['GET'])
 def existing_projects():
-    rows = db.get_projects()
+    rows = projects_table.get_projects()
     return jsonify([dict(row) for row in rows])
 
 @app.route("/api/projects", methods=['POST'])
@@ -45,32 +49,32 @@ def create_project():
     shotsNum = data.get("shotsNum")
     deadline = data.get("deadline")
 
-    project_id = db.add_project(name, type, status, shotsNum, deadline)
-    new_shot_list = db.add_shots_for_project(project_id, shotsNum)
+    project_id = projects_table.add_project(name, type, status, shotsNum, deadline)
+    new_shot_list = shots_table.add_shots_for_project(project_id, shotsNum)
     return jsonify({"project_id" : project_id, "project_name": name}), 201
 
 @app.route("/api/projects/<int:project_id>", methods=['DELETE'])
 def delete_project(project_id):
-    db.remove_project(project_id)
-    db.remove_shots_for_project(project_id)
+    projects_table.remove_project(project_id)
+    shots_table.remove_shots_for_project(project_id)
     return jsonify({"message": "Project deleted"}), 200
     
 
 @app.route("/api/projects/<int:project_id>", methods=['GET'])
 def display_project(project_id):
-    row = db.get_project(project_id)
+    row = projects_table.get_project(project_id)
     if row is None:
         return jsonify({"error": "Project not found"}), 404
     return jsonify(dict(row))
 
 @app.route("/api/shots", methods=['GET'])
 def existing_shots():
-    shot_rows = db.get_all_shots()
+    shot_rows = shots_table.get_all_shots()
     return jsonify([dict(shot_row) for shot_row in shot_rows])
 
 @app.route("/api/projects/<int:project_id>/shots", methods=['GET'])
 def display_shots_for_project(project_id):
-    shots = db.get_shots_from_project(project_id)
+    shots = shots_table.get_shots_from_project(project_id)
     return jsonify([dict(shot) for shot in shots])
 
 @app.route("/api/projects/<int:project_id>/shots/<int:shot_id>", methods = ['PATCH'])
@@ -80,7 +84,7 @@ def change_status(project_id, shot_id):
     value = data.get("value")
     if not status_item or value is None:
         return jsonify({"error" : "Missing required components to update the shot"})
-    db.change_shot_status(shot_id, status_item, value)
+    shots_table.change_shot_status(shot_id, status_item, value)
     return jsonify({"message" : "Shot updated"})
 
 
