@@ -13,24 +13,24 @@ cors = CORS(app, resources={r"/*": {"origins": "*"}}) # specify origins
 db_path = "tracktor.db"
 projects_table = ProjectsDBMapper(db_path)
 shots_table = ShotsDBMapper(db_path)
+users_table = UsersDBMapper(db_path)
 
 @app.route("/init", methods = ['GET'])
 def init_db():
     projects_table.init_project_table()
     shots_table.init_shots_table()
+    users_table.init_users_table()
     return jsonify({"message" : "Database init complete"})
 
 @app.route("/api/users", methods =['GET'])
-def users():
-    return jsonify(
-        {
-            "users": [
-                'zack',
-                'pan',
-                'jessy'
-            ]
-        }
-    )
+def existing_users():
+    rows = users_table.get_users()
+    users = []
+    for row in rows:
+        user_dict = dict(row)
+        user_dict.pop("user_password", None)
+        users.append(user_dict)
+    return jsonify(users)
 
 @app.route("/api/projects", methods=['GET'])
 def existing_projects():
@@ -87,6 +87,32 @@ def change_status(project_id, shot_id):
     shots_table.change_shot_status(shot_id, status_item, value)
     return jsonify({"message" : "Shot updated"})
 
+@app.route("/api/users", methods = ['POST'])
+def create_new_user():
+    data = request.get_json()
+    if "user_name" not in data or "user_password" not in data:
+        return jsonify({"error":"Missing user name or password"}), 400
+    
+    name = data.get("user_name")
+    password = data.get("user_password")
+
+    user_id = users_table.add_user(name, password)
+    return jsonify({"message": "New user created!"})
+
+@app.route("/api/login", methods = ['POST'])
+def login_user():
+    data = request.get_json()
+    if "user_name" not in data or "user_password" not in data:
+        return jsonify({"error":"Missing user name or password"}), 400
+    
+    name = data.get("user_name")
+    password = data.get("user_password")
+
+    login_result = users_table.verify_user(name, password)
+    if login_result:
+        return jsonify({"success": True}), 200
+    else:
+        return jsonify({"success": False, "error": "Invalid username or password!"})
 
 if __name__ == "__main__":
     with app.app_context():

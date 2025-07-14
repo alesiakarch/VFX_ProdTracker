@@ -44,3 +44,42 @@ def test_init_users_table(db_mapper):
         assert type == expected_columns[i][1], f"Expected {expected_columns[i][1]} but got {type}"
     
     connection.close()
+
+def test_add_user(db_mapper):
+    db_mapper.init_users_table()
+
+    username = "Mike03"
+    password = "BigBang23"
+    # test the function
+    new_id = db_mapper.add_user(username, password)
+    assert isinstance(new_id, int)
+
+    # check new id user exists in table
+    connection = db_mapper.get_db()
+    cursor = connection.cursor()
+    cursor.execute("SELECT * FROM users WHERE id = ?", (new_id,))
+    row = cursor.fetchone()
+    assert row is not None
+    connection.close()
+
+def test_get_user(db_mapper):
+    db_mapper.init_users_table()
+
+    # add a sample user
+    new_id = db_mapper.add_user("sampleUser", "samplePass")
+    
+    # test the get
+    row = db_mapper.get_user(new_id)
+    assert row is not None
+    assert row["user_name"] == "sampleUser"
+    assert row["user_password"] == "samplePass"
+
+def test_get_users(db_mapper):
+    db_mapper.init_users_table()
+
+    db_mapper.add_user("sampleUser1", "samplePass1")
+    db_mapper.add_user("sampleUser2", "samplePass2")
+
+    rows = db_mapper.get_users()
+    assert isinstance(rows, list)
+    assert len(rows) == 2

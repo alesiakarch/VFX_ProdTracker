@@ -17,7 +17,7 @@ class ProjectsDBMapper:
     """
     def __init__(self, db_name):
         """
-        Initilizes the name for the application database
+        initializes the name for the application database
         """
         self.db_name = db_name
         self.connection = None

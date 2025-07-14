@@ -169,7 +169,7 @@ def test_change_shot_status(projects_mapper, shots_mapper):
     # init the tables
     shots_mapper.init_shots_table()
 
-    # create projetand shots
+    # create project and shots
     project_id = projects_mapper.add_project("Test", "vfx", "New", 1, "2025")
     shots_mapper.add_shots_for_project(project_id, 1)
 

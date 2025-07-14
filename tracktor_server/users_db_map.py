@@ -1,11 +1,10 @@
 #!/usr/bin/env -S uv run --script
 
-import argparse
 import sqlite3
+import bcrypt
 from sqlite3 import Error
-import logging
 from pathlib import Path
-from dataclasses import dataclass
+
 
 """
 A mapping file to consolidate the database calls in one place, so we can swap backend from this one file
@@ -18,7 +17,7 @@ class UsersDBMapper:
 
     def __init__(self, db_name):
         """
-        Initilizes the name for the application database
+        initializes the name for the application database
         """
         self.db_name = db_name
         self.connection = None
@@ -46,3 +45,63 @@ class UsersDBMapper:
                                 )
         connection.commit()
         connection.close()
+
+    def add_user(self, username, password):
+        """
+        Adds a new user to the database
+        """
+        # hash the password
+        hashed = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode("utf-8")
+
+        connection = self.get_db()
+        cursor = connection.cursor()
+        cursor.execute("""
+                        INSERT INTO users(
+                        user_name,
+                        user_password
+                       )
+                       VALUES(?, ?)
+                       """,
+                       (username, hashed))
+        
+        connection.commit()
+        new_id = cursor.lastrowid
+        connection.close()
+
+        return new_id
+    
+    def get_user(self, user_id):
+        """
+        Gets user data from table based on user_id
+        """
+
+        connection = self.get_db()
+        row = connection.execute("SELECT * FROM users WHERE id = ?", (user_id,)).fetchone()
+        connection.close()
+        return row
+    
+    def get_users(self):
+        """
+        Get all users
+        """
+        connection = self.get_db()
+        rows = connection.execute("SELECT * FROM users").fetchall()
+        connection.close()
+        return rows
+    
+    def verify_user(self, username, password):
+        """
+        Verifies user with username and password
+        """
+        connection = self.get_db()
+        row = connection.execute("SELECT user_password FROM users WHERE user_name = ?", (username,)).fetchone()
+        connection.close()
+
+        if row is None:
+            return False
+        stored_hash = row["user_password"]
+        if isinstance(stored_hash, str):
+            stored_hash = stored_hash.encode("utf-8")
+
+        # return True is match, overwise False
+        return bcrypt.checkpw(password.encode("utf-8"), stored_hash)
