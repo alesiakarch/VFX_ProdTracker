@@ -94,14 +94,18 @@ class UsersDBMapper:
         Verifies user with username and password
         """
         connection = self.get_db()
-        row = connection.execute("SELECT user_password FROM users WHERE user_name = ?", (username,)).fetchone()
+        row = connection.execute("SELECT user_password, id FROM users WHERE user_name = ?", (username,)).fetchone()
         connection.close()
 
         if row is None:
-            return False
+            return False, None
         stored_hash = row["user_password"]
         if isinstance(stored_hash, str):
             stored_hash = stored_hash.encode("utf-8")
 
         # return True is match, overwise False
-        return bcrypt.checkpw(password.encode("utf-8"), stored_hash)
+        if bcrypt.checkpw(password.encode("utf-8"), stored_hash):
+            return True, row["id"]
+        else:
+            return False, None
+        

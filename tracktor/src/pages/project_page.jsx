@@ -30,7 +30,7 @@ export function ProjectPage({ reloadProjects }) {
         try {
             await axios.delete(`http://localhost:8080/api/projects/${projectId}`)
             alert("Project deleted!")
-            navigate("/")
+            navigate("/:username/projects/")
     
         } catch (error) {
             alert("Failed to delete project")
@@ -106,6 +106,7 @@ export function ProjectPage({ reloadProjects }) {
             )}
             <br></br>
             <Button title={"Delete project"} onClick={deleteProject}/>
+            <Button title={"Share project"} onClick={() => navigate(`/projects/${projectId}/share`)}/>
         </>
     )
 }

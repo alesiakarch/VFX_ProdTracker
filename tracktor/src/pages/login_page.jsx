@@ -22,6 +22,7 @@ export function LoginPage() {
                                                user_password:password
                                             })
             if (response.data.success) {
+                localStorage.setItem("user_id", response.data.user_id)
                 navigate(`/${username}/projects`)
             } else {
                 alert("Invalid username or password!")
@@ -70,7 +71,7 @@ export function LoginPage() {
 
     return (
         <div>
-            <h1>Titles of the page</h1>
+            <h1>VFX Production Tracker</h1>
             <label>
                 Username:
                 <Textbox className={"bg-gray-200"} 

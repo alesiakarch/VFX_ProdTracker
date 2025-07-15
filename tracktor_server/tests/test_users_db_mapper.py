@@ -1,4 +1,5 @@
 import pytest
+import bcrypt
 import tempfile
 import os
 from tracktor_server.users_db_map import UsersDBMapper
@@ -20,8 +21,9 @@ def test_get_db(db_mapper):
 def test_init_users_table(db_mapper):
     db_mapper.init_users_table()
 
-    expected_columns = [("name", "TEXT"),
-                        ("password", "TEXT")
+    expected_columns = [("id", "INTEGER"),
+                        ("user_name", "TEXT"),
+                        ("user_password", "TEXT")
                         ]
     
     connection = db_mapper.get_db()
@@ -32,7 +34,7 @@ def test_init_users_table(db_mapper):
     assert table is not None, "Table 'users' was not created"
 
 
-    cursor.execute("PRAGMA table_info(projects)")
+    cursor.execute("PRAGMA table_info(users)")
     columns = cursor.fetchall()
     columns = [tuple(row) for row in columns]
     print(columns)
@@ -72,7 +74,7 @@ def test_get_user(db_mapper):
     row = db_mapper.get_user(new_id)
     assert row is not None
     assert row["user_name"] == "sampleUser"
-    assert row["user_password"] == "samplePass"
+    assert bcrypt.checkpw("samplePass".encode("utf-8"), row["user_password"].encode("utf-8"))
 
 def test_get_users(db_mapper):
     db_mapper.init_users_table()

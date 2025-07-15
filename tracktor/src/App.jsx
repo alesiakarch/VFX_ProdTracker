@@ -7,6 +7,8 @@ import { ProjectPage } from './pages/project_page.jsx'
 import { Layout } from './pages/layout.jsx'
 import { LoginPage } from './pages/login_page.jsx'
 import axios from 'axios'
+import { ShareProjectPage } from './pages/share_project_page.jsx'
+import { JoinProjectPage } from './pages/join_project_page.jsx'
 
 
 function App() {
@@ -38,13 +40,13 @@ function App() {
                     <Route path="/" element={<LoginPage />} />
                     <Route path="/create-project" element={<CreateProjectPage projects={projects} setProjects={setProjects}/>} />
                     <Route path="/projects/:projectId" element={<ProjectPage />} />
+                    <Route path="/projects/:projectId/share" element={<ShareProjectPage/>} />
+                    <Route path="/:username/projects/join" element={<JoinProjectPage/>} />
                 </Route>
-                
             </Routes>
         </Router>
         </>
     )
-  
 }
 
 export default App

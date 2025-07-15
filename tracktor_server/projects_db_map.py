@@ -1,9 +1,8 @@
 #!/usr/bin/env -S uv run --script
 
-import argparse
 import sqlite3
+import uuid
 from sqlite3 import Error
-import logging
 from pathlib import Path
 from dataclasses import dataclass
 
@@ -42,7 +41,8 @@ class ProjectsDBMapper:
                                 type TEXT NOT NULL,
                                 status TEXT,
                                 shotsNum INTEGER,
-                                deadline TEXT
+                                deadline TEXT,
+                                project_sharecode TEXT
                                 )
                                 """)
         connection.commit()
@@ -100,3 +100,26 @@ class ProjectsDBMapper:
         row = connection.execute("SELECT * FROM projects WHERE id = ?", (project_id,)).fetchone()
         connection.close()
         return row
+    
+    def get_sharecode(self, project_id):
+        """
+        Generates and/or returns a sharing code for the project with project_id
+        """
+        connection = self.get_db()
+        cursor = connection.cursor()
+        row = cursor.execute("SELECT project_sharecode FROM projects WHERE id = ?", (project_id,)).fetchone()
+        sharecode = row["project_sharecode"] if row and row["project_sharecode"] else None
+        if sharecode is None:
+            sharecode = str(uuid.uuid4()).split("-")[0]
+            cursor.execute("UPDATE projects SET project_sharecode = ? WHERE id = ?", (sharecode, project_id))
+            connection.commit()
+
+        connection.close()
+        return sharecode
+    
+    def get_project_id_by_sharecode(self, sharecode):
+        connection = self.get_db()
+        row = connection.execute("SELECT id FROM projects WHERE project_sharecode = ?", (sharecode,)).fetchone()
+        connection.close()
+        return row["id"] if row else None
+
