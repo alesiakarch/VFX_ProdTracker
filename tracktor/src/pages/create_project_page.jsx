@@ -11,6 +11,7 @@ export function CreateProjectPage({projects, setProjects}) {
     const [shotsNum, setShotsNum] = useState([])
     const [projectDeadline, setProjectDeadline] = useState("")
     const navigate = useNavigate()
+    const user_id = localStorage.getItem("user_id")
 
     async function CreateProject() {
         if (!projectName.trim()) return;
@@ -20,11 +21,13 @@ export function CreateProjectPage({projects, setProjects}) {
                                             name:projectName,
                                             type:projectType,
                                             shotsNum: shotsNum,
-                                            deadline: projectDeadline    
+                                            deadline: projectDeadline,
+                                            user_id: user_id
+
                                         })
 
             setProjects([...projects, response.data])
-            navigate("/")
+            navigate("/:username/projects")
         } catch (error) {
             console.error("Axios error object:", error);
             if (error.response) {
