@@ -38,7 +38,7 @@ function App() {
                 <Route element={<Layout/>}>
                     <Route path ="/:username/projects" element={<LandingPage projects={projects} reloadProjects={fetchData}/>}/>
                     <Route path="/" element={<LoginPage />} />
-                    <Route path="/create-project" element={<CreateProjectPage projects={projects} setProjects={setProjects}/>} />
+                    <Route path="/:username/create-project" element={<CreateProjectPage projects={projects} setProjects={setProjects}/>} />
                     <Route path="/projects/:projectId" element={<ProjectPage />} />
                     <Route path="/projects/:projectId/share" element={<ShareProjectPage/>} />
                     <Route path="/:username/projects/join" element={<JoinProjectPage/>} />

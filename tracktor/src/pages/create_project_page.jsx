@@ -1,5 +1,5 @@
 import { use, useState } from "react"
-import { NavigationType, useNavigate } from "react-router-dom"
+import { NavigationType, useNavigate, useParams } from "react-router-dom"
 import { Textbox } from "../components/Textbox"
 import { Button } from "../components/Button"
 import axios from "axios"
@@ -10,6 +10,7 @@ export function CreateProjectPage({projects, setProjects}) {
     const [projectType, setProjectType] = useState("")
     const [shotsNum, setShotsNum] = useState([])
     const [projectDeadline, setProjectDeadline] = useState("")
+    const { username } = useParams()
     const navigate = useNavigate()
     const user_id = localStorage.getItem("user_id")
 
@@ -27,7 +28,7 @@ export function CreateProjectPage({projects, setProjects}) {
                                         })
 
             setProjects([...projects, response.data])
-            navigate("/:username/projects")
+            navigate(`/${username}/projects`)
         } catch (error) {
             console.error("Axios error object:", error);
             if (error.response) {

@@ -29,8 +29,8 @@ export function LandingPage({ projects, reloadProjects }) {
                 <Button key={project.id} title={project.name} onClick={() => navigate(`/projects/${project.id}`)}/>
             ))
             }
-            <Button title = {"Create new project"} onClick={() => navigate("/create-project")}/>
-            <Button title = {"Add existing project"} onClick={() => navigate("/:username/projects/join")}/>
+            <Button title = {"Create new project"} onClick={() => navigate(`/${username}/create-project`)}/>
+            <Button title = {"Add existing project"} onClick={() => navigate(`/${username}/projects/join`)}/>
         </div>
     );
 }

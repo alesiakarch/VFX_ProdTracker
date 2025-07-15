@@ -6,7 +6,7 @@ import axios from "axios";
 
 export function LoginPage() {
 
-
+    const [successMsg, setSuccessMsg] = useState(""); 
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const navigate = useNavigate()
@@ -52,6 +52,7 @@ export function LoginPage() {
                                             user_name:username,
                                             user_password:password
                                         })
+            setSuccessMsg("User successfully created!")
         } catch (error) {
              console.error("Axios error object:", error);
             if (error.response) {
@@ -72,6 +73,17 @@ export function LoginPage() {
     return (
         <div>
             <h1>VFX Production Tracker</h1>
+            {successMsg && (
+                <div style={{
+                    background: "#d1fae5",
+                    color: "#065f46",
+                    padding: "10px",
+                    borderRadius: "5px",
+                    marginBottom: "10px"
+                }}>
+                    {successMsg}
+                </div>
+            )}
             <label>
                 Username:
                 <Textbox className={"bg-gray-200"} 
