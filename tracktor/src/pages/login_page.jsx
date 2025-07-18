@@ -71,35 +71,39 @@ export function LoginPage() {
     }
 
     return (
-        <div>
-            <h1>VFX Production Tracker</h1>
-            {successMsg && (
-                <div style={{
-                    background: "#d1fae5",
-                    color: "#065f46",
-                    padding: "10px",
-                    borderRadius: "5px",
-                    marginBottom: "10px"
-                }}>
-                    {successMsg}
-                </div>
-            )}
-            <label>
-                Username:
-                <Textbox className={"bg-gray-200"} 
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}/>
-            </label>
-            <br></br>
-            <label>
-                Password:
-                <Textbox className={"bg-gray-200"}
-                 value={password}
-                 onChange={(e) => setPassword(e.target.value)}/>
-            </label>
-            <br></br>
-            <Button title={"Log in"} onClick={LoginUser}/>
-            <Button title={"Sign up"} onClick={CreateUser}/>
+        <div className="flex items-center justify-center min-h-screen bg-amber-50" >
+            <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-md" >
+                <h1 className="text-3xl font-extrabold mb-6 text-center text-amber-700 drop-shadow">VFX Production Tracker</h1>
+                {successMsg && (
+                    <div style={{
+                        background: "#d1fae5",
+                        color: "#065f46",
+                        padding: "10px",
+                        borderRadius: "5px",
+                        marginBottom: "10px"
+                    }}>
+                        {successMsg}
+                    </div>
+                )}
+                <label className="flex items-center justify-center">
+                    Username:
+                    <Textbox className={"bg-gray-200 ml-2 rounded"} 
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}/>
+                </label>
+                <br></br>
+                <label className="flex items-center justify-center">
+                    Password:
+                    <Textbox className={"bg-gray-200 ml-2 rounded"}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}/>
+                </label>
+                <br></br>
+                    <div className="flex justify-center flex-row gap-3">
+                        <Button className="mb-2 bg-amber-300 text-white px-4 py-2 rounded" title={"Log in"} onClick={LoginUser}/>
+                        <Button className="mb-2 bg-amber-300 text-white px-4 py-2 rounded" title={"Sign up"} onClick={CreateUser}/>
+                    </div>
+            </div>
         </div>
     )
 }

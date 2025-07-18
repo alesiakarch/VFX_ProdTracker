@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { Button } from "../components/Button";
 import { StatusListbox } from "../components/StatusListbox";
+import { Table } from "../components/Table";
 
 export function ProjectPage({ reloadProjects }) {
     const { projectId } = useParams()
@@ -53,60 +54,63 @@ export function ProjectPage({ reloadProjects }) {
 
     if (project === undefined) return <div>Loading...</div>
     if (project === null) return <div>Project not found</div>
+
+    const shotColumns = [
+        { key: "shot_name", header: "Shot Name" },
+        { key: "status", header: "Status", render: (value, row) => (
+            <StatusListbox
+                value={value}
+                onChange={newStatus => updateShotField(row.shot_id, "status", newStatus)}
+            />
+        )},
+        { key: "lay_status", header: "Layout", render: (value, row) => (
+            <StatusListbox
+                value={value}
+                onChange={newStatus => updateShotField(row.shot_id, "lay_status", newStatus)}
+            />
+        )},
+        { key: "anim_status", header: "Animation", render: (value, row) => (
+            <StatusListbox
+                value={value}
+                onChange={newStatus => updateShotField(row.shot_id, "anim_status", newStatus)}
+            />
+        )},
+        { key: "cfx_status", header: "CFX", render: (value, row) => (
+            <StatusListbox
+                value={value}
+                onChange={newStatus => updateShotField(row.shot_id, "cfx_status", newStatus)}
+            />
+        )},
+        { key: "lit_status", header: "Lighting", render: (value, row) => (
+            <StatusListbox
+                value={value}
+                onChange={newStatus => updateShotField(row.shot_id, "lit_status", newStatus)}
+            />
+        )},
+        { key: "assets_status", header: "Assets", render: (value, row) => (
+            <StatusListbox
+                value={value}
+                onChange={newStatus => updateShotField(row.shot_id, "assets_status", newStatus)}
+            />
+        )},
+    ];
+    console.log(shots && shots[0]);
     return (
-        <>
-            <h1>Project: {project.name}</h1>
-            <br></br>
-            {shots && shots.length > 0 ? (
-            <table>
-                <thead>
-                    <tr>
-                        <th>Shot Name</th>
-                        <th>Status</th>
-                        <th>Layout</th>
-                        <th>Animation</th>
-                        <th>CFX</th>
-                        <th>Lighting</th>
-                        <th>Assets</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {shots.map((s) => (
-                        <tr key={s.shot_id}>
-                            <td>{s.shot_name}</td>
-                            <td>
-                                <StatusListbox value={s.status} 
-                                onChange={newStatus => updateShotField(s.shot_id, "status", newStatus)}
-                                />
-                            </td>
-                            <td>
-                                <StatusListbox value={s.lay_status} 
-                                onChange={newStatus => updateShotField(s.shot_id, "lay_status", newStatus)}
-                                /></td>
-                            <td>
-                                <StatusListbox value={s.anim_status} 
-                                onChange={newStatus => updateShotField(s.shot_id, "anim_status", newStatus)}
-                                />
-                            </td>
-                            <td>
-                                <StatusListbox value={s.cfx_status} 
-                                onChange={newStatus => updateShotField(s.shot_id, "cfx_status", newStatus)}
-                                />    
-                            </td>
-                            <td>
-                                <StatusListbox value={s.status} 
-                                onChange={newStatus => updateShotField(s.shot_id, "status", newStatus)}
-                                />
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-            ) : (<div>Not shots found for this project</div>
-            )}
-            <br></br>
-            <Button title={"Delete project"} onClick={deleteProject}/>
-            <Button title={"Share project"} onClick={() => navigate(`/projects/${projectId}/share`)}/>
-        </>
+        <div className="flex items-center justify-center min-h-screen bg-amber-50">
+            <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-screen ">
+                <h1 className="text-3xl font-extrabold mb-6 text-center text-amber-700 drop-shadow">Project: {project.name}</h1>
+                <br></br>
+                {shots && shots.length > 0 ? (
+                    <Table columns={shotColumns} rows={shots} />
+                ) : (
+                    <div>Not shots found for this project</div>
+                )}
+                <br></br>
+                <div className="flex justify-center flex-row gap-1">
+                    <Button className="bg-amber-300 text-white mb-2 px-6 py-2 rounded" title={"Delete project"} onClick={deleteProject}/>
+                    <Button className="bg-amber-300 text-white mb-2 px-6 py-2 rounded" title={"Share project"} onClick={() => navigate(`/projects/${projectId}/share`)}/>
+                </div>
+             </div>
+        </div>
     )
 }

@@ -44,44 +44,45 @@ export function CreateProjectPage({projects, setProjects}) {
         }
     }
     return (
-        <>
-            <h1>Create New Project</h1>
-            <br></br>
-            <div>
-                <label>
+        <div className="flex items-center justify-center min-h-screen bg-amber-50">
+            <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-md">
+                <h1 className="text-3xl font-extrabold mb-6 text-center text-amber-700 drop-shadow">
+                Create New Project</h1>
+                <label className="flex items-center justify-center">
                     Project name:
-                    <Textbox className={"bg-gray-200"}
+                    <Textbox className={"ml-2 bg-gray-200 rounded"}
                      value={projectName}
                      onChange={(e) => setProjectName(e.target.value)}/>
                 </label>
                 <br></br>
-                <label>
+                <label className="flex items-center justify-center">
                     Project type:
-                    <Textbox className={"bg-gray-200"}
+                    <Textbox className={" ml-2 bg-gray-200 rounded"}
                      value={projectType}
                      onChange={(e) => setProjectType(e.target.value)}
                     />
                 </label>
                 <br></br>
-                <label>
+                <label className="flex items-center justify-center">
                     Number of shots:
-                    <Textbox className={"bg-gray-200"}
+                    <Textbox className={" ml-2 bg-gray-200 rounded"}
                      value={shotsNum}
                      onChange={(e) => setShotsNum(Number(e.target.value))}
                     />
                 </label>
                 <br></br>
-                <label>
+                <label className="flex items-center justify-center">
                     Project deadline:
-                    <Textbox className={"bg-gray-200"}
+                    <Textbox className={"ml-2 bg-gray-200 rounded"}
                      value={projectDeadline}
                      onChange={(e) => setProjectDeadline(e.target.value)}
                     />
                 </label>
+                 <Button className="mb-2 bg-amber-300 text-white px-4 py-2 rounded mt-2" title={"Create project!"} onClick={CreateProject}/>
                 
             </div>
-            <br></br>
-            <Button title={"Create project!"} onClick={CreateProject}/>
-        </>
+
+           
+        </div>
     )
 }
