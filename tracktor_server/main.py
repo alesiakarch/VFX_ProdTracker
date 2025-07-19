@@ -7,6 +7,7 @@ from tracktor_server.projects_db_map import ProjectsDBMapper
 from tracktor_server.shots_db_map import ShotsDBMapper
 from tracktor_server.users_db_map import UsersDBMapper
 from tracktor_server.usersProjects_db_map import UsersProjectsDBMapper
+from tracktor_server.assets_db_map import AssetsDBMapper
 
 app = Flask(__name__)
 cors = CORS(app, resources={r"/*": {"origins": "*"}}) # specify origins
@@ -16,6 +17,7 @@ projects_table = ProjectsDBMapper(db_path)
 shots_table = ShotsDBMapper(db_path)
 users_table = UsersDBMapper(db_path)
 usersProjects_table = UsersProjectsDBMapper(db_path)
+assets_table = AssetsDBMapper(db_path)
 
 @app.route("/init", methods = ['GET'])
 def init_db():
@@ -23,6 +25,7 @@ def init_db():
     shots_table.init_shots_table()
     users_table.init_users_table()
     usersProjects_table.init_usersProjects_table()
+    assets_table.init_assets_table()
     return jsonify({"message" : "Database init complete"})
 
 @app.route("/api/users", methods =['GET'])
@@ -89,6 +92,11 @@ def display_project(project_id):
 def display_shots_for_project(project_id):
     shots = shots_table.get_shots_from_project(project_id)
     return jsonify([dict(shot) for shot in shots])
+
+@app.route("/api/projects/<int:project_id>/assets", methods=['GET'])
+def display_assets_for_project(project_id):
+    assets = assets_table.get_assets_from_project(project_id)
+    return jsonify([dict(asset) for asset in assets])
 
 @app.route("/api/projects/<int:project_id>/shots/<int:shot_id>", methods = ['PATCH'])
 def change_status(project_id, shot_id):

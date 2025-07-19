@@ -37,6 +37,7 @@ class AssetsDBMapper:
         connection.execute("""
                                 CREATE TABLE IF NOT EXISTS assets(
                                 id INTEGER PRIMARY KEY AUTOINCREMENT,
+                                project_id INTEGER,
                                 asset_name TEXT NOT NULL,
                                 asset_type TEXT NOT NULL,
                                 asset_status TEXT NOT NULL,
@@ -50,3 +51,12 @@ class AssetsDBMapper:
                                 )
         connection.commit()
         connection.close()
+
+    def get_assets_from_project(self, project_id):
+        """
+        Get assets to display on the project page
+        """
+        connection = self.get_db()
+        asset_rows = connection.execute("SELECT * FROM assets WHERE project_id = ?", (project_id,)).fetchall()
+        connection.close()
+        return asset_rows
