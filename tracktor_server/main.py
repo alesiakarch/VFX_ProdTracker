@@ -78,7 +78,7 @@ def create_project():
 @app.route("/api/projects/<int:project_id>", methods=['DELETE'])
 def delete_project(project_id):
     projects_table.remove_project(project_id)
-    shots_table.remove_shots_for_project(project_id)
+    shots_table.remove_shots_from_project(project_id)
     return jsonify({"message": "Project deleted"}), 200
     
 @app.route("/api/projects/<int:project_id>", methods=['GET'])

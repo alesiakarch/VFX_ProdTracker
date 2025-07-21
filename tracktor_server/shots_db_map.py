@@ -109,7 +109,17 @@ class ShotsDBMapper:
             connection.commit()
         connection.close()
 
-    def remove_shots_for_project(self, project_id):
+    def remove_shot_from_project(self, shot_id):
+        """
+        Deletes a chosen project from project table. Note that idex won't be reset
+        """
+        connection = self.get_db()
+        cursor = connection.cursor()
+        cursor.execute("DELETE FROM shots WHERE shot_id=?", (shot_id,))
+        connection.commit()
+        connection.close()
+    
+    def remove_shots_from_project(self, project_id):
         """
         Removes all shots from the specified project
         """
@@ -128,6 +138,5 @@ class ShotsDBMapper:
         cursor.execute(f"UPDATE shots SET {status_item} = ? WHERE shot_id = ?", (new_status, shot_id))
         connection.commit()
         connection.close()
-
         
 

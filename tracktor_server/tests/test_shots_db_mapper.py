@@ -147,7 +147,7 @@ def test_add_shots_for_project(projects_mapper, shots_mapper):
     assert len(rows) == shotsNum
     connection.close()
 
-def test_remove_shots_for_project(projects_mapper, shots_mapper):
+def test_remove_shots_from_project(projects_mapper, shots_mapper):
     # set up tables
     shots_mapper.init_shots_table()
 
@@ -157,13 +157,32 @@ def test_remove_shots_for_project(projects_mapper, shots_mapper):
     shots_mapper.add_shots_for_project(pid1, 1)
     shots_mapper.add_shots_for_project(pid2, 1)
 
-    shots_mapper.remove_shots_for_project(pid1)
+    shots_mapper.remove_shots_from_project(pid1)
 
     shots1 = shots_mapper.get_shots_from_project(pid1)
     shots2 = shots_mapper.get_shots_from_project(pid2)
 
     assert len(shots1) == 0
     assert len(shots2) == 1
+
+def test_remove_shot_from_project(projects_mapper, shots_mapper):
+    shots_mapper.init_shots_table()
+    projects_mapper.init_project_table()
+
+    # add example project
+    shots_num = 1
+    new_id = projects_mapper.add_project("TestName", "TestType", "New", shots_num, "2025")
+    shots = shots_mapper.add_shots_for_project(new_id, shots_num)
+    # Get the shot_id of the automatically created shot
+    shots = shots_mapper.get_shots_from_project(new_id)
+    shot_id = shots[0]["shot_id"]
+
+    # delete project
+    shots_mapper.remove_shot_from_project(shot_id)
+
+    # check the project is actually gone
+    row = shots_mapper.get_shot_from_project(new_id, shot_id)
+    assert row is None
 
 def test_change_shot_status(projects_mapper, shots_mapper):
     # init the tables
