@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, act } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { Button } from "../components/Button";
@@ -73,6 +73,32 @@ export function ProjectPage({ reloadProjects }) {
         }
     }
 
+
+    // const createNew = async () => {
+    //     try {
+    //         if (activeTab === "shots") {
+    //             const response = await axios.patch(`http://localhost:8080/api/projects/${projectId}/shots`, {
+    //                 // logic here
+    //                 shots_name : `shotnameCHANGE PLS`,
+    //                 shotsNum = 1
+    //             })
+    //             const newShot = response.data
+    //             setShots([...shots, newShot])
+    //         } else if (activeTab === "assets") {
+    //             const response = await axios.patch(`http://localhost:8080/api/projects/${projectId}/assets`. {
+    //                 // logic here
+    //                 asset_name : "asset name variable set by the user"
+    //                 asset_type : "asset type variable set by the user"
+    //             })
+    //             const newAsset = response.data
+    //             setAssets([...assets, newAsset])
+    //         } 
+    //     }   catch (error) {
+    //             alert(`Failed to create new ${activeTab === "shots" ? "shot" : "asset"}`)
+    //             }
+
+    // }
+
     if (project === undefined) return <div>Loading...</div>
     if (project === null) return <div>Project not found</div>
 
@@ -127,13 +153,13 @@ export function ProjectPage({ reloadProjects }) {
         { key: "mod_status", header: "Modelling", render: (value, row) => (
             <StatusListbox
                 value={value}
-                onChange={newStatus => updateShotField(row.shot_id, "lay_status", newStatus)}
+                onChange={newStatus => updateShotField(row.shot_id, "mod_status", newStatus)}
             />
         )},
         { key: "srf_status", header: "Surfacing", render: (value, row) => (
             <StatusListbox
                 value={value}
-                onChange={newStatus => updateShotField(row.shot_id, "anim_status", newStatus)}
+                onChange={newStatus => updateShotField(row.shot_id, "srf_status", newStatus)}
             />
         )},
         { key: "cfx_status", header: "CFX", render: (value, row) => (
@@ -163,25 +189,32 @@ export function ProjectPage({ reloadProjects }) {
                     onClick={() => setActiveTab("assets")}
                     title={"Assets"}/>
                 </div>
-                <h1 className="text-3xl font-extrabold mb-6 text-center text-amber-700 drop-shadow">Project: {project.name}</h1>
+
+                <h1 className="text-3xl font-extrabold mb-6 text-center text-amber-700 drop-shadow">Project: {project.name}</h1>         
+                <div className="mt-5 mb-5 text-left">
+                    <Button className={`px-4 py-2 rounded-t bg-gray-100 text-amber-800`}
+                    //onClick={createNew}
+                    title={`${activeTab === "assets" ? "New Asset" : "New Shot" }`}/>
+                </div>
                 {activeTab === "shots" && (
-                    <>
-                    {shots && shots.length > 0 ? (
-                    <Table columns={shotColumns} rows={shots} />
-                    ) : (
-                        <div>Not shots found for this project</div>
-                    )}
-                    </>
+                    <div>
+                        
+                        {shots && shots.length > 0 ? (
+                        <Table columns={shotColumns} rows={shots} />
+                        ) : (
+                            <div>Not shots found for this project</div>
+                        )}
+                    </div>
                 )}
 
                 {activeTab === "assets" && (
-                     <>
-                    {assets && assets.length > 0 ? (
-                    <Table columns={assetColumns} rows={assets} />
-                    ) : (
-                        <div>No assets found for this project</div>
-                    )}
-                    </>
+                     <div>
+                        {assets && assets.length > 0 ? (
+                        <Table columns={assetColumns} rows={assets} />
+                        ) : (
+                            <div>No assets found for this project</div>
+                        )}
+                    </div>
                 )}
             
             

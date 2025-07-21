@@ -25,7 +25,8 @@ def test_init_project_table(db_mapper):
                         ("type", "TEXT"),
                         ("status", "TEXT"),
                         ("shotsNum", "INTEGER"),
-                        ("deadline", "TEXT")
+                        ("deadline", "TEXT"),
+                        ("project_sharecode", "TEXT")
                         ]
     
     connection = db_mapper.get_db()
