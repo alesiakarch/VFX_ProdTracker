@@ -6,7 +6,11 @@ readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
     "bcrypt>=4.3.0",
+    "pyside2",
 ]
 
 [tool.uv.workspace]
 members = ["tracktor_server"]
+
+[tool.uv]
+required-environments = ['platform_system == "Windows"']
