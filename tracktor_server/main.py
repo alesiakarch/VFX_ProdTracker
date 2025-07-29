@@ -157,6 +157,10 @@ def join_project():
     usersProjects_table.add_assignment(user_id, project_id, "Member")
     return jsonify({"message": "Project joined!", "project_id": project_id})
 
+@app.route("/api/ping")
+def ping():
+    return jsonify({"message": "Tracktor API is reachable"})
+
 if __name__ == "__main__":
     with app.app_context():
         init_db()
