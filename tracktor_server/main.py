@@ -157,6 +157,18 @@ def join_project():
     usersProjects_table.add_assignment(user_id, project_id, "Member")
     return jsonify({"message": "Project joined!", "project_id": project_id})
 
+@app.route("/api/projects/<int:project_id>/create_asset", methods = ['POST'])
+def create_asset():
+    data = request.get_json()
+    if "asset_name" not in data:
+        return jsonify({"error" : "Missing the asset's name"}), 400
+    project_id = data.get("project_id")
+    asset_name = data.get("asset_name")
+    asset_type = data.get("asset_type")
+
+    asset_id = assets_table.add_asset_for_project(project_id, asset_name, asset_type)
+    return jsonify({"asset_id" : asset_id, "asset_name": asset_name}), 201
+
 if __name__ == "__main__":
     with app.app_context():
         init_db()

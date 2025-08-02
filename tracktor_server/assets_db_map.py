@@ -48,7 +48,7 @@ class AssetsDBMapper:
                                 lit_status TEXT NOT NULL,
                                 UNIQUE(asset_name)
                                 )
-                                """,
+                                """
                                 )
         connection.commit()
         connection.close()
