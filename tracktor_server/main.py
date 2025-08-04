@@ -79,6 +79,7 @@ def create_project():
 def delete_project(project_id):
     projects_table.remove_project(project_id)
     shots_table.remove_shots_from_project(project_id)
+    assets_table.remove_assets_from_project(project_id)
     return jsonify({"message": "Project deleted"}), 200
     
 @app.route("/api/projects/<int:project_id>", methods=['GET'])
@@ -168,6 +169,17 @@ def create_asset():
 
     asset_id = assets_table.add_asset_for_project(project_id, asset_name, asset_type)
     return jsonify({"asset_id" : asset_id, "asset_name": asset_name}), 201
+
+@app.route("/api/projects/<int:project_id>/create_shot", methods=['POST'])
+def create_shot(project_id):
+    data = request.get_json()
+    shot_name = data.get("shot_name")
+    if not shot_name:
+        return jsonify({"error": "Missing shot name"}), 400
+    
+    shot_id = shots_table.add_shot_for_project(project_id, shot_name)
+    shot = shots_table.get_shot_from_project(project_id, shot_id)
+    return jsonify(dict(shot)), 201
 
 if __name__ == "__main__":
     with app.app_context():

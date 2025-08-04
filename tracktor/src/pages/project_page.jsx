@@ -4,6 +4,8 @@ import axios from "axios";
 import { Button } from "../components/Button";
 import { StatusListbox } from "../components/StatusListbox";
 import { Table } from "../components/Table";
+import { Popup } from "../components/Popup";
+import { Label } from "@headlessui/react";
 
 export function ProjectPage({ reloadProjects }) {
     const { projectId } = useParams()
@@ -11,6 +13,8 @@ export function ProjectPage({ reloadProjects }) {
     const [shots, setShots] = useState()
     const [assets, setAssets] = useState()
     const [activeTab, setActiveTab] = useState("shots")
+    const [popupOpen, setPopupOpen] = useState(false)
+    const [popupFields, setPopupFields] = useState([])
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -74,30 +78,42 @@ export function ProjectPage({ reloadProjects }) {
     }
 
 
-    // const createNew = async () => {
-    //     try {
-    //         if (activeTab === "shots") {
-    //             const response = await axios.patch(`http://localhost:8080/api/projects/${projectId}/shots`, {
-    //                 // logic here
-    //                 shots_name : `shotnameCHANGE PLS`,
-    //                 shotsNum = 1
-    //             })
-    //             const newShot = response.data
-    //             setShots([...shots, newShot])
-    //         } else if (activeTab === "assets") {
-    //             const response = await axios.patch(`http://localhost:8080/api/projects/${projectId}/assets`. {
-    //                 // logic here
-    //                 asset_name : "asset name variable set by the user"
-    //                 asset_type : "asset type variable set by the user"
-    //             })
-    //             const newAsset = response.data
-    //             setAssets([...assets, newAsset])
-    //         } 
-    //     }   catch (error) {
-    //             alert(`Failed to create new ${activeTab === "shots" ? "shot" : "asset"}`)
-    //             }
+    const handleCreateClick = () => {
+        if (activeTab === "shots") {
+            setPopupFields([
+                {name : "shot_name", label: "Shot Name", required: true}
+            ])
+        } else {
+            setPopupFields([
+                {name: "asset_name", label: "Asset Name", required: true},
+                {name: "asset_type", label: "Asset Type", required: true}
+            ])
+        }
+        setPopupOpen(true)
+    }
 
-    // }
+
+    const handlePopupSubmit = async (formData) => {
+        try {
+            if (activeTab === "shots") {
+                const response = await axios.post(`http://localhost:8080/api/projects/${projectId}/create_shot`, {
+                    project_id: projectId,
+                    shot_name: formData.shot_name
+                })
+                setShots([...shots, response.data])
+            } else {
+                const response = await axios.post(`http://localhost:8080/api/projects/${projectId}/create_asset`, {
+                    project_id: projectId,
+                    asset_name: formData.asset_name,
+                    asset_type: formData.asset_type
+            });
+            setAssets([...assets, response.data]);
+            }
+            setPopupOpen(false)
+        } catch (error) {
+            alert("Failed to create item")
+        }
+    }
 
     if (project === undefined) return <div>Loading...</div>
     if (project === null) return <div>Project not found</div>
@@ -193,7 +209,7 @@ export function ProjectPage({ reloadProjects }) {
                 <h1 className="text-3xl font-extrabold mb-6 text-center text-amber-700 drop-shadow">Project: {project.name}</h1>         
                 <div className="mt-5 mb-5 text-left">
                     <Button className={`px-4 py-2 rounded-t bg-gray-100 text-amber-800`}
-                    //onClick={createNew}
+                    onClick={handleCreateClick}
                     title={`${activeTab === "assets" ? "New Asset" : "New Shot" }`}/>
                 </div>
                 {activeTab === "shots" && (
@@ -223,6 +239,12 @@ export function ProjectPage({ reloadProjects }) {
                     <Button className="bg-amber-300 text-white mb-2 px-6 py-2 rounded mt-4" title={"Share project"} onClick={() => navigate(`/projects/${projectId}/share`)}/>
                 </div>
              </div>
+             <Popup
+                open={popupOpen}
+                onClose={() => setPopupOpen(false)}
+                onSubmit={handlePopupSubmit}
+                fields={popupFields}
+             />
         </div>
     )
 }
