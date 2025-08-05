@@ -57,6 +57,11 @@ def existing_assignments():
     else:
         rows = usersProjects_table.get_all_assignments()
         return jsonify([dict(row) for row in rows])
+    
+@app.route("/api/assets", methods=['GET'])
+def existing_assets():
+    asset_rows = assets_table.get_all_assets()
+    return jsonify([dict(asset_row) for asset_row in asset_rows])
 
 @app.route("/api/projects", methods=['POST'])
 def create_project():
@@ -100,7 +105,7 @@ def display_assets_for_project(project_id):
     return jsonify([dict(asset) for asset in assets])
 
 @app.route("/api/projects/<int:project_id>/shots/<int:shot_id>", methods = ['PATCH'])
-def change_status(project_id, shot_id):
+def change_shot_status(project_id, shot_id):
     data = request.get_json()
     status_item = data.get("status_item")
     value = data.get("value")
@@ -108,6 +113,16 @@ def change_status(project_id, shot_id):
         return jsonify({"error" : "Missing required components to update the shot"})
     shots_table.change_shot_status(shot_id, status_item, value)
     return jsonify({"message" : "Shot updated"})
+
+@app.route("/api/projects/<int:project_id>/assets/<int:asset_id>", methods=['PATCH'])
+def change_asset_status(project_id, asset_id):
+    data = request.get_json()
+    status_item = data.get("status_item")
+    value = data.get("value")
+    if not status_item or value is None:
+        return jsonify({"error" : "Missing required components to update the asset"})
+    assets_table.change_asset_status(asset_id, status_item, value)
+    return jsonify({"message" : "Asset updated"})
 
 @app.route("/api/users", methods = ['POST'])
 def create_new_user():
@@ -159,7 +174,7 @@ def join_project():
     return jsonify({"message": "Project joined!", "project_id": project_id})
 
 @app.route("/api/projects/<int:project_id>/create_asset", methods = ['POST'])
-def create_asset():
+def create_asset(project_id):
     data = request.get_json()
     if "asset_name" not in data:
         return jsonify({"error" : "Missing the asset's name"}), 400
@@ -168,7 +183,8 @@ def create_asset():
     asset_type = data.get("asset_type")
 
     asset_id = assets_table.add_asset_for_project(project_id, asset_name, asset_type)
-    return jsonify({"asset_id" : asset_id, "asset_name": asset_name}), 201
+    asset = assets_table.get_asset_from_project(project_id, asset_id)
+    return jsonify(dict(asset)), 201
 
 @app.route("/api/projects/<int:project_id>/create_shot", methods=['POST'])
 def create_shot(project_id):

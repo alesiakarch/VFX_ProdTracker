@@ -65,7 +65,7 @@ export function ProjectPage({ reloadProjects }) {
 
     const updateAssetField = async(asset_id, field, newStatus) => {
         try {
-            await axios.patch(`http://localhost:8080/api/projects/${projectId}/shots/${shot_id}`,
+            await axios.patch(`http://localhost:8080/api/projects/${projectId}/assets/${asset_id}`,
                  {status_item : field, value : newStatus})
             setAssets(assets =>
                 assets.map(asset =>
@@ -160,34 +160,41 @@ export function ProjectPage({ reloadProjects }) {
 
     const assetColumns = [
         { key: "asset_name", header: "Asset Name" },
-        { key: "status", header: "Status", render: (value, row) => (
+        { key: "asset_type", header: "Asset Type"},
+        { key: "asset_status", header: "Status", render: (value, row) => (
             <StatusListbox
                 value={value}
-                onChange={newStatus => updateShotField(row.shot_id, "status", newStatus)}
+                onChange={newStatus => updateAssetField(row.asset_id, "asset_status", newStatus)}
+            />
+        )},
+        { key: "prepro_status", header: "Pre-production", render: (value, row) => (
+            <StatusListbox
+                value={value}
+                onChange={newStatus => updateAssetField(row.asset_id, "prepro_status", newStatus)}
             />
         )},
         { key: "mod_status", header: "Modelling", render: (value, row) => (
             <StatusListbox
                 value={value}
-                onChange={newStatus => updateShotField(row.shot_id, "mod_status", newStatus)}
+                onChange={newStatus => updateAssetField(row.asset_id, "mod_status", newStatus)}
             />
         )},
         { key: "srf_status", header: "Surfacing", render: (value, row) => (
             <StatusListbox
                 value={value}
-                onChange={newStatus => updateShotField(row.shot_id, "srf_status", newStatus)}
+                onChange={newStatus => updateAssetField(row.asset_id, "srf_status", newStatus)}
             />
         )},
         { key: "cfx_status", header: "CFX", render: (value, row) => (
             <StatusListbox
                 value={value}
-                onChange={newStatus => updateShotField(row.shot_id, "cfx_status", newStatus)}
+                onChange={newStatus => updateAssetField(row.asset_id, "cfx_status", newStatus)}
             />
         )},
         { key: "lit_status", header: "Lighting", render: (value, row) => (
             <StatusListbox
                 value={value}
-                onChange={newStatus => updateShotField(row.shot_id, "lit_status", newStatus)}
+                onChange={newStatus => updateAssetField(row.asset_id, "lit_status", newStatus)}
             />
         )},
     ];
@@ -222,9 +229,10 @@ export function ProjectPage({ reloadProjects }) {
                         )}
                     </div>
                 )}
-
+                
                 {activeTab === "assets" && (
                      <div>
+                        {console.log("Assets:", assets)}
                         {assets && assets.length > 0 ? (
                         <Table columns={assetColumns} rows={assets} />
                         ) : (
