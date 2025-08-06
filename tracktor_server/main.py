@@ -57,6 +57,11 @@ def existing_assignments():
     else:
         rows = usersProjects_table.get_all_assignments()
         return jsonify([dict(row) for row in rows])
+    
+@app.route("/api/assets", methods=['GET'])
+def existing_assets():
+    asset_rows = assets_table.get_all_assets()
+    return jsonify([dict(asset_row) for asset_row in asset_rows])
 
 @app.route("/api/projects", methods=['POST'])
 def create_project():
@@ -79,6 +84,7 @@ def create_project():
 def delete_project(project_id):
     projects_table.remove_project(project_id)
     shots_table.remove_shots_from_project(project_id)
+    assets_table.remove_assets_from_project(project_id)
     return jsonify({"message": "Project deleted"}), 200
     
 @app.route("/api/projects/<int:project_id>", methods=['GET'])
@@ -99,7 +105,7 @@ def display_assets_for_project(project_id):
     return jsonify([dict(asset) for asset in assets])
 
 @app.route("/api/projects/<int:project_id>/shots/<int:shot_id>", methods = ['PATCH'])
-def change_status(project_id, shot_id):
+def change_shot_status(project_id, shot_id):
     data = request.get_json()
     status_item = data.get("status_item")
     value = data.get("value")
@@ -107,6 +113,16 @@ def change_status(project_id, shot_id):
         return jsonify({"error" : "Missing required components to update the shot"})
     shots_table.change_shot_status(shot_id, status_item, value)
     return jsonify({"message" : "Shot updated"})
+
+@app.route("/api/projects/<int:project_id>/assets/<int:asset_id>", methods=['PATCH'])
+def change_asset_status(project_id, asset_id):
+    data = request.get_json()
+    status_item = data.get("status_item")
+    value = data.get("value")
+    if not status_item or value is None:
+        return jsonify({"error" : "Missing required components to update the asset"})
+    assets_table.change_asset_status(asset_id, status_item, value)
+    return jsonify({"message" : "Asset updated"})
 
 @app.route("/api/users", methods = ['POST'])
 def create_new_user():
@@ -156,6 +172,30 @@ def join_project():
 
     usersProjects_table.add_assignment(user_id, project_id, "Member")
     return jsonify({"message": "Project joined!", "project_id": project_id})
+
+@app.route("/api/projects/<int:project_id>/create_asset", methods = ['POST'])
+def create_asset(project_id):
+    data = request.get_json()
+    if "asset_name" not in data:
+        return jsonify({"error" : "Missing the asset's name"}), 400
+    project_id = data.get("project_id")
+    asset_name = data.get("asset_name")
+    asset_type = data.get("asset_type")
+
+    asset_id = assets_table.add_asset_for_project(project_id, asset_name, asset_type)
+    asset = assets_table.get_asset_from_project(project_id, asset_id)
+    return jsonify(dict(asset)), 201
+
+@app.route("/api/projects/<int:project_id>/create_shot", methods=['POST'])
+def create_shot(project_id):
+    data = request.get_json()
+    shot_name = data.get("shot_name")
+    if not shot_name:
+        return jsonify({"error": "Missing shot name"}), 400
+    
+    shot_id = shots_table.add_shot_for_project(project_id, shot_name)
+    shot = shots_table.get_shot_from_project(project_id, shot_id)
+    return jsonify(dict(shot)), 201
 
 if __name__ == "__main__":
     with app.app_context():

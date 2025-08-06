@@ -25,7 +25,7 @@ def test_get_db(assets_mapper):
     assert connection is not None
     connection.close()
 
-def test_init_users_table(assets_mapper):
+def test_init_assets_table(assets_mapper):
     assets_mapper.init_assets_table()
 
     expected_columns = [("id", "INTEGER"),
@@ -71,8 +71,8 @@ def test_add_asset_for_project(assets_mapper, projects_mapper):
     assets_mapper.init_assets_table()
 
     # create project
-    assetsNum = 2
-    new_id = projects_mapper.add_project("A", "vfx", "New", assetsNum, "2025")
+    shotsNum = 2
+    new_id = projects_mapper.add_project("A", "vfx", "New", shotsNum, "2025")
 
     # create assets
     assets_mapper.add_asset_for_project(new_id, "Sample_asset", "model")
