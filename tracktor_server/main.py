@@ -197,6 +197,12 @@ def create_shot(project_id):
     shot = shots_table.get_shot_from_project(project_id, shot_id)
     return jsonify(dict(shot)), 201
 
+@app.route("/api/projects/<int:project_id>/assets/<int:asset_id>", methods=['GET'])
+def display_asset(project_id, asset_id):
+    asset = assets_table.get_asset_from_project(project_id, asset_id)
+    return jsonify(dict(asset))
+
+
 if __name__ == "__main__":
     with app.app_context():
         init_db()

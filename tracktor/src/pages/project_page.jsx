@@ -77,7 +77,6 @@ export function ProjectPage({ reloadProjects }) {
         }
     }
 
-
     const handleCreateClick = () => {
         if (activeTab === "shots") {
             setPopupFields([
@@ -91,7 +90,6 @@ export function ProjectPage({ reloadProjects }) {
         }
         setPopupOpen(true)
     }
-
 
     const handlePopupSubmit = async (formData) => {
         try {
