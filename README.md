@@ -50,3 +50,8 @@ This project is aimed at small teams and individuals, working on CGI/film relate
     Tailwindcss
     Flask/Python
     SQLite
+
+
+some resoursees: 
+https://www.geeksforgeeks.org/python/flask-app-routing/
+https://reactrouter.com/api/hooks/useSearchParams

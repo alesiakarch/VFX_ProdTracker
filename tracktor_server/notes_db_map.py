@@ -37,9 +37,11 @@ class NotesDBMapper:
         connection.execute("""
                             CREATE TABLE IF NOT EXISTS notes(
                            id INTEGER PRIMARY KEY AUTOINCREMENT,
+                           item_type TEXT NOT NULL,
                            item_id INTEGER,
-                           timestamp TEXT NOT NULL
-                           note_body TEXT NOT NULL
+                           item_dept TEXT NOT NULL,
+                           timestamp TEXT NOT NULL,
+                           note_body TEXT NOT NULL,
                            author TEXT NOT NULL
                            )
                            """
@@ -47,7 +49,7 @@ class NotesDBMapper:
         connection.commit()
         connection.close()
 
-    def add_note(self, item_id, message, timestamp, user):
+    def add_note(self, item_type, item_id, item_dept, message, timestamp, user):
         """
         Creates a note to a specified item
         """
@@ -55,33 +57,46 @@ class NotesDBMapper:
         cursor = connection.cursor()
         cursor.execute("""
                         INSERT INTO notes(
+                       item_type,
                        item_id,
+                       item_dept,
                        timestamp,
                        note_body,
                        author
                        )
-                       VALUES(?, ?, ?, ?)
+                       VALUES(?, ?, ?, ?, ?, ?)
                        """,
-                       (item_id, timestamp, message, user))
+                       (item_type, item_id, item_dept, timestamp, message, user))
         connection.commit()
         note_id = cursor.lastrowid
         connection.close()
         return note_id
     
-    def get_notes(self, item_id):
+    def get_notes(self, item_type, item_id):
         """
         Gets all notes for the item
         """
         connection = self.get_db()
-        notes_rows = connection.execute("SELECT * FROM notes WHERE item_id = ?", item_id)
+        notes_rows = connection.execute("SELECT * FROM notes WHERE item_type = ? AND item_id = ?", (item_type, item_id)).fetchall()
         connection.close
         return notes_rows
     
-    def get_all_notes(self)
+    def get_all_notes(self):
         """
         Get all existing notes
         """
-        connection = self.get_db
-        notes_rows = connection.execute("SELECT * FROM notes")
+        connection = self.get_db()
+        notes_rows = connection.execute("SELECT * FROM notes").fetchall()
         connection.close()
         return notes_rows
+    
+    def get_notes_for_dept(self, item_type, item_id, item_dept):
+        """
+        Get all notes relevant to the item's dept (LAY, ANI)
+        """
+
+        connection = self.get_db()
+        notes_rows = connection.execute("SELECT * FROM notes WHERE item_type = ? AND item_id = ? AND item_dept = ?", (item_type, item_id, item_dept))
+        connection.close
+        return notes_rows
+    

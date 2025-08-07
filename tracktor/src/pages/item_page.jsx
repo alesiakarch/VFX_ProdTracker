@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { useParams, useNavigate } from "react-router-dom"
+import { useParams, useNavigate, useSearchParams } from "react-router-dom"
 import { Button } from "../components/Button"
 import axios from "axios"
 
@@ -8,7 +8,9 @@ export function ItemPage(){
     const [item, setItem] = useState(null)
     const navigate = useNavigate()
     const [activeTab, setActiveTab] = useState("")
+    const [searchParams, setSearchParams] = useSearchParams()
 
+    const department = searchParams.get("department") || "All"
 
     const DEPARTMENTS = {
         shots: ["All", "lay", "anim", "cfx", "lit", "assets"],
@@ -37,10 +39,15 @@ export function ItemPage(){
 
     if (!item) return <div>Loading...</div>;
 
-    const handleStatusClick = () => {
-        navigate(`/projects/${projectId}/${itemType}/${itemId}/notes`)
+
+    const handleTabChange = (dept) => {
+        setSearchParams({department : dept})
+        setActiveTab(dept)
     }
 
+    const handleStatusClick = (dept) => {
+        navigate(`/projects/${projectId}/${itemType}/${itemId}/${dept}/notes`)
+    }
     console.log("itemType:", itemType, "departments:", departments);
 
     return (
@@ -57,7 +64,7 @@ export function ItemPage(){
                         <Button
                             key={dept}
                             className={`px-4 py-2 rounded-t ${activeTab === dept ? "bg-amber-300 text-white font-bold" : "bg-gray-100 text-amber-800"}`}
-                            onClick={() => setActiveTab(dept)}
+                            onClick={() => handleTabChange(dept)}
                             title={dept.toUpperCase()}
                         />
 
@@ -67,7 +74,7 @@ export function ItemPage(){
                     <div className="mb-4 text-left">
                         <Button
                             className={"px-4 py-2 rounded-t bg-amber-300 text-white font-bold"}
-                            onClick={handleStatusClick}
+                            onClick={() => {handleStatusClick(activeTab)}}
                             title={`${activeTab.toUpperCase()} Notes`}
                         />
                     </div>

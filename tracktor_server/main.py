@@ -8,6 +8,7 @@ from tracktor_server.shots_db_map import ShotsDBMapper
 from tracktor_server.users_db_map import UsersDBMapper
 from tracktor_server.usersProjects_db_map import UsersProjectsDBMapper
 from tracktor_server.assets_db_map import AssetsDBMapper
+from tracktor_server.notes_db_map import NotesDBMapper
 
 app = Flask(__name__)
 cors = CORS(app, resources={r"/*": {"origins": "*"}}) # specify origins
@@ -18,6 +19,7 @@ shots_table = ShotsDBMapper(db_path)
 users_table = UsersDBMapper(db_path)
 usersProjects_table = UsersProjectsDBMapper(db_path)
 assets_table = AssetsDBMapper(db_path)
+notes_table = NotesDBMapper(db_path)
 
 @app.route("/init", methods = ['GET'])
 def init_db():
@@ -26,6 +28,7 @@ def init_db():
     users_table.init_users_table()
     usersProjects_table.init_usersProjects_table()
     assets_table.init_assets_table()
+    notes_table.init_notes_table()
     return jsonify({"message" : "Database init complete"})
 
 @app.route("/api/users", methods =['GET'])
@@ -62,6 +65,12 @@ def existing_assignments():
 def existing_assets():
     asset_rows = assets_table.get_all_assets()
     return jsonify([dict(asset_row) for asset_row in asset_rows])
+
+@app.route("/api/notes", methods=['GET'])
+def existing_notes():
+    notes_rows = notes_table.get_all_notes()
+    return jsonify([dict(note_row) for note_row in notes_rows])
+
 
 @app.route("/api/projects", methods=['POST'])
 def create_project():
@@ -202,6 +211,21 @@ def display_asset(project_id, asset_id):
     asset = assets_table.get_asset_from_project(project_id, asset_id)
     return jsonify(dict(asset))
 
+@app.route("/api/projects/<int:project_id>/<item_type>/<int:item_id>/<item_dept>/notes", methods=['GET'])
+def display_notes(project_id, item_type, item_id, item_dept):
+    notes = notes_table.get_notes_for_dept(item_type, item_id, item_dept)
+    return jsonify([dict(note) for note in notes])
+
+@app.route("/api/projects/<int:project_id>/<item_type>/<int:item_id>/<item_dept>/notes", methods=['POST'])
+def add_note(project_id, item_type, item_id, item_dept):
+    data = request.get_json()
+    note_body = data.get("note_body")
+    if not note_body:
+        return jsonify({"error" : "Missing the note itself"}), 400
+    
+    new_note_id = notes_table.add_note(item_type, item_id, item_dept, note_body, timestamp="now", user="janedoe")
+    #new_note = notes_table.get_note_from_dept(new_note_id)
+    return jsonify(dict(new_note)), 201
 
 if __name__ == "__main__":
     with app.app_context():
