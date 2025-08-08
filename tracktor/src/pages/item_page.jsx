@@ -55,7 +55,7 @@ export function ItemPage(){
         <div className="flex items-center justify-center min-h-screen bg-amber-50">
             <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-screen">
                 <h1 className="text-3xl font-extrabold mb-6 text-center text-amber-700 drop-shadow">
-                {itemType === "shot"
+                {itemType === "shots"
                     ? `Shot name: ${item.shot_name || item.name}`
                     : `Asset name: ${item.asset_name || item.name}`}
                 </h1>

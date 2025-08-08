@@ -211,6 +211,11 @@ def display_asset(project_id, asset_id):
     asset = assets_table.get_asset_from_project(project_id, asset_id)
     return jsonify(dict(asset))
 
+@app.route("/api/projects/<int:project_id>/shots/<int:shot_id>", methods=['GET'])
+def display_shot(project_id, shot_id):
+    shot = shots_table.get_shot_from_project(project_id, shot_id)
+    return jsonify(dict(shot))
+
 @app.route("/api/projects/<int:project_id>/<item_type>/<int:item_id>/<item_dept>/notes", methods=['GET'])
 def display_notes(project_id, item_type, item_id, item_dept):
     notes = notes_table.get_notes_for_dept(item_type, item_id, item_dept)
@@ -223,8 +228,8 @@ def add_note(project_id, item_type, item_id, item_dept):
     if not note_body:
         return jsonify({"error" : "Missing the note itself"}), 400
     
-    new_note_id = notes_table.add_note(item_type, item_id, item_dept, note_body, timestamp="now", user="janedoe")
-    #new_note = notes_table.get_note_from_dept(new_note_id)
+    new_note_id = notes_table.add_note(item_type, item_id, item_dept, note_body, user="janedoe")
+    new_note = notes_table.get_note_by_id(new_note_id)
     return jsonify(dict(new_note)), 201
 
 if __name__ == "__main__":

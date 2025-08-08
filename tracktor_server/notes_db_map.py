@@ -1,6 +1,7 @@
 #!/usr/bin/env -S uv run --script
 
 import sqlite3
+import datetime
 from sqlite3 import Error
 from pathlib import Path
 
@@ -49,10 +50,12 @@ class NotesDBMapper:
         connection.commit()
         connection.close()
 
-    def add_note(self, item_type, item_id, item_dept, message, timestamp, user):
+    def add_note(self, item_type, item_id, item_dept, message, user, timestamp=None ):
         """
         Creates a note to a specified item
         """
+        if timestamp is None:
+            timestamp = datetime.datetime.now().isoformat(timespec='minutes')
         connection = self.get_db()
         cursor = connection.cursor()
         cursor.execute("""
@@ -96,7 +99,17 @@ class NotesDBMapper:
         """
 
         connection = self.get_db()
-        notes_rows = connection.execute("SELECT * FROM notes WHERE item_type = ? AND item_id = ? AND item_dept = ?", (item_type, item_id, item_dept))
-        connection.close
+        notes_rows = connection.execute("SELECT * FROM notes WHERE item_type = ? AND item_id = ? AND item_dept = ?", (item_type, item_id, item_dept)).fetchall()
+        connection.close()
         return notes_rows
     
+    def get_note_by_id(self, note_id):
+        """
+        Returns a single not with its note_id 
+        """
+
+        connection = self.get_db()
+        row = connection.execute("SELECT * FROM notes WHERE id = ?", (note_id,)).fetchone()
+        connection.close()
+        return row
+

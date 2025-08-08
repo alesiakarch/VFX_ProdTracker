@@ -24,7 +24,7 @@ export function NotesPage(){
     }, [itemId, itemType, itemDept])
 
     const handleAddNoteClick = () => {
-        setPopupFields([{name: "note_body", label: "Note: ", required: true}])
+        setPopupFields([{name: "note_body", label: "Note: ", required: true, type: "textarea" }])
         setPopupOpen(true)
     }
 
@@ -57,15 +57,30 @@ export function NotesPage(){
 
     return (
         <div className="flex items-center justify-center min-h-screen bg-amber-50">
-            <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-screen">
+            <div className="w-full max-w-4xl px-4">
+                <div className="bg-white shadow-lg rounded-lg p-8">
                 <h1 className="text-3xl font-extrabold mb-6 text-center text-amber-700 drop-shadow">Notes: </h1>
                 <Button
                     className={"text_left px-4 py-2 rounded-t bg-amber-300 text-white font-bold"}
                     onClick={handleAddNoteClick}
                     title={`Add ${itemDept.toUpperCase()} note`}
                 />
+                </div>
 
+                <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {[...notes]
+                    .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
+                    .map((note) => (
+                    <div key={note.id} className="bg-white shadow-lg rounded-lg p-8"> 
+                        <div className="text-2xs text-gray-500 mb-2">{note.timestamp}| {note.author}</div>
+                        <div className="text-xl mb-2 ">{note.note_body}</div>
+                    </div>
+                ))}
+                </div>
             </div>
+
+
+            
             <Popup
                 open={popupOpen}
                 onClose={() => setPopupOpen(false)}
