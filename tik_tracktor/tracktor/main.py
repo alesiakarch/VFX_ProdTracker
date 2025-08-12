@@ -84,6 +84,12 @@ class ProductionPlatform(ManagementCore):
         if hasattr(self, "tracktor_password"):
             del self.tracktor_password
 
+    def get_projects(self):
+        """Return a list of projects from Tracktor."""
+        if not self.api:
+            raise Exception("Not authenticated")
+        return self.api.get_projects()
+
     @staticmethod # sets settings 
     def get_settings_ui():
         """Return the settings UI for the Tracktor platform."""
