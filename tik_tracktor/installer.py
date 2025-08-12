@@ -8,6 +8,7 @@ def get_tik_path():
     Fetches the installation path for TIK manager
     """
     default_path = r"C:\Program Files\TikWorks\tik_manager4"
+    # linux path: "/home/s5221034/tik_manager4-4.4.1/tik_manager4/management"
     user_path = input(f"Enter the TIK Manager install path [{default_path}]: ")
     tik_path = user_path if user_path else default_path
     tik_path = Path(tik_path)
@@ -21,8 +22,8 @@ def copy_plugin(path: Path):
     """
     Copies the plugin folders into respective TIK manager ones
     """
-    src_folder = Path(__file__).parent / "ui_tracktor"
-    destination = tik_path / "management" / "ui_tracktor"
+    src_folder = Path(__file__).parent / "tracktor"
+    destination = tik_path / "management" / "tracktor"
     if destination.exists():
         print(f"Warning: Destination '{destination}' already exists and will be overwritten")
         shutil.rmtree(destination)

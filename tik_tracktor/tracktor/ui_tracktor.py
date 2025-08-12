@@ -5,6 +5,9 @@ from tik_manager4.management.ui.dialog import CreateFromManagementDialog
 from tik_manager4.ui.widgets.pop import WaitDialog
 
 from tik_manager4.management.extension_core import ExtensionCore
+from tik_manager4.management.tracktor.main import ProductionPlatform
+
+# path to the tracktor plugin
 import sys
 import os
 sys.path.append(os.path.dirname(__file__))
@@ -14,10 +17,17 @@ import requests
 
 
 class UiExtensions(ExtensionCore):
-    def __init__(self, parent):
+    def __init__(self, parent, tik_main_obj=None):
         print("UiExtensions __init__ called")
         self.parent = parent
         self.feedback = Feedback(parent=self.parent)
+
+        # create Production platform for using backend main.py logic
+        if tik_main_obj is not None:
+            self.production_platform = ProductionPlatform(tik_main_obj)
+        else:
+            self.production_platform = None
+
 
     def build_ui(self):
         """Build the extension UI."""
@@ -77,7 +87,11 @@ class UiExtensions(ExtensionCore):
         self.api = TracktorAPI("http://localhost:8080/api", username, password)
         try:
             self.api.login()
+            if hasattr(self, "production_platform"):
+                self.production_platform.tracktor_username = username
+                self.production_platform.tracktor_password = password
             self.feedback.pop_info(title="Logged in", text="Logged into Tracktor")
+        
         except Exception as e:
             self.feedback.pop_info(title="Error", text=f"Login failed: {e}")
 
