@@ -2,9 +2,8 @@
 from .tracktor_api import TracktorAPI
 from tik_manager4.management.management_core import ManagementCore
 from tik_manager4.core.constants import DataTypes 
-from .ui_tracktor import UiExtensions
 
-# add external folder with extra dependancies if needed
+# add external folder with extra dependencies if needed
 print("tracktor/main.py loaded")
 
 class ProductionPlatform(ManagementCore):
@@ -25,7 +24,7 @@ class ProductionPlatform(ManagementCore):
     def __init__(self, tik_main_obj):
         self.tik_main = tik_main_obj
         self.api = None # not connected to Tracktor yet
-        self.is_authenticated = False # user isnt logged in yet
+        self.is_authenticated = False # user isn't logged in yet
         self.user = None # no user data at the init
 
     @property
@@ -44,6 +43,8 @@ class ProductionPlatform(ManagementCore):
     
     def authenticate(self):
         """Authenticate the user."""
+        print("Authenticating with:", self.host_api, getattr(self, "tracktor_username", None), getattr(self, "tracktor_password", None))
+
         url = self.host_api
         username = getattr(self, "tracktor_username", None)
         password = getattr(self, "tracktor_password", None)
@@ -93,7 +94,7 @@ class ProductionPlatform(ManagementCore):
     @staticmethod # sets settings 
     def get_settings_ui():
         """Return the settings UI for the Tracktor platform."""
-        # Make sure the keys are unique accross all other platforms
+        # Make sure the keys are unique across all other platforms
         return {
             "_tracktor_blank": {
                 "display_name": "",

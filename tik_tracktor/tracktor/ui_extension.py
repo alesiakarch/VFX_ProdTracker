@@ -5,7 +5,6 @@ from tik_manager4.management.ui.dialog import CreateFromManagementDialog
 from tik_manager4.ui.widgets.pop import WaitDialog
 
 from tik_manager4.management.extension_core import ExtensionCore
-from tik_manager4.management.tracktor.main import ProductionPlatform
 
 # path to the tracktor plugin
 import sys
@@ -17,17 +16,10 @@ import requests
 
 
 class UiExtensions(ExtensionCore):
-    def __init__(self, parent, tik_main_obj=None):
+    def __init__(self, parent):
         print("UiExtensions __init__ called")
         self.parent = parent
         self.feedback = Feedback(parent=self.parent)
-
-        # create Production platform for using backend main.py logic
-        if tik_main_obj is not None:
-            self.production_platform = ProductionPlatform(tik_main_obj)
-        else:
-            self.production_platform = None
-
 
     def build_ui(self):
         """Build the extension UI."""
@@ -84,57 +76,42 @@ class UiExtensions(ExtensionCore):
         if not ok2 or not password:
             return
 
-        self.api = TracktorAPI("http://localhost:8080/api", username, password)
         try:
-            self.api.login()
-            if hasattr(self, "production_platform"):
-                self.production_platform.tracktor_username = username
-                self.production_platform.tracktor_password = password
+            print("Available management handlers:", getattr(self.parent, "management_handlers", None))
+            handler = self.parent.management_connect("tracktor")
+            if handler:
+                handler.tracktor_username = username
+                handler.tracktor_password = password
+                if not handler.is_authenticated:
+                    self.feedback.pop_info(title="Error", text="Login failed: Invalid credentials or missing URL.")
+                    return
             self.feedback.pop_info(title="Logged in", text="Logged into Tracktor")
         
-        except Exception as e:
+        except Exception as e:  
             self.feedback.pop_info(title="Error", text=f"Login failed: {e}")
 
     def on_create_project_from_tracktor(self):
         """
         Pulls the project from tracktor and hold connection for updates
         """
-        if not hasattr(self, 'api') or not self.api:
-            self.feedback.pop_info(title="Not logged in", text="Please login to Tracktor first.")
+        print("Create Project from Tracktor clicked")
+        if not self.parent._pre_check(level=3):
+            print("Pre-check failed")
             return
+        print("Available management handlers:", getattr(self.parent, "management_handlers", None))
+        handler = self.parent.management_connect("tracktor")
+        if not handler:
+            print("Handler missing")
+            return
+        
+        print("Opening dialog")
+        dialog = CreateFromManagementDialog(handler, parent=self.parent)
+        state = dialog.exec()
 
-        try:
-            # 1. Get list of projects from Tracktor backend
-            projects = self.api.get_projects()
-            if not projects:
-                self.feedback.pop_info(title="No projects", text="No projects found on Tracktor.")
-                return
-
-            # 2. Let the user pick one project
-            project_names = [p['name'] for p in projects]
-            selected, ok = QtWidgets.QInputDialog.getItem(
-                self.parent, "Select Tracktor Project",
-                "Choose a project:", project_names, 0, False
-            )
-            if not ok or not selected:
-                return  # user cancelled
-
-            # 3. Find the full project data
-            project_data = next((p for p in projects if p['name'] == selected), None)
-            if not project_data:
-                self.feedback.pop_info(title="Not found", text="Selected project not found.")
-                return
-
-            # 4. Call TIK's CreateFromManagementDialog to create local project
-            dialog = CreateFromManagementDialog(self.parent)#, project_data)
-            dialog.exec_()
-
-            # 5. Store the project ID for future syncing
-            self.current_project_id = project_data['id']
-            self.feedback.pop_info(title="Project created", text=f"Project '{selected}' created locally from Tracktor.")
-
-        except Exception as e:
-            self.feedback.pop_info(title="Error", text=f"Error creating project: {e}")
+        print("Dialog closed, state:", state)
+        if state:
+            self.parent.refresh_project()
+            self.parent.status_bar.showMessage("Project created successfully")
 
     def on_force_sync(self):
         """
