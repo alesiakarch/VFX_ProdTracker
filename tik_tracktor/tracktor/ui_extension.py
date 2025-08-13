@@ -1,4 +1,5 @@
 """UI Extension for Tracktor"""
+
 from tik_manager4.ui.Qt import QtWidgets
 from tik_manager4.ui.dialog.feedback import Feedback
 from tik_manager4.management.ui.dialog import CreateFromManagementDialog
@@ -7,11 +8,9 @@ from tik_manager4.ui.widgets.pop import WaitDialog
 from tik_manager4.management.extension_core import ExtensionCore
 
 # path to the tracktor plugin
-import sys
-import os
-sys.path.append(os.path.dirname(__file__))
-from tracktor_api import TracktorAPI
-
+#import sys
+#import os
+#sys.path.append(os.path.dirname(__file__))
 import requests
 
 
@@ -69,26 +68,64 @@ class UiExtensions(ExtensionCore):
         """
         Logs the user into its Tracktor environment
         """
-        username, ok1 = QtWidgets.QInputDialog.getText(self.parent, "Login", "Username:")
-        if not ok1 or not username:
-            return
-        password, ok2 = QtWidgets.QInputDialog.getText(self.parent, "Login", "Password:", QtWidgets.QLineEdit.Password)
-        if not ok2 or not password:
-            return
+        # # Ask for username
+        # username, ok1 = QtWidgets.QInputDialog.getText(
+        #     self.parent, "Login", "Username:"
+        # )
+        # print(username)
+        # if not ok1 or not username:
+        #     return
 
-        try:
-            print("Available management handlers:", getattr(self.parent, "management_handlers", None))
-            handler = self.parent.management_connect("tracktor")
-            if handler:
-                handler.tracktor_username = username
-                handler.tracktor_password = password
-                if not handler.is_authenticated:
-                    self.feedback.pop_info(title="Error", text="Login failed: Invalid credentials or missing URL.")
-                    return
-            self.feedback.pop_info(title="Logged in", text="Logged into Tracktor")
-        
-        except Exception as e:  
-            self.feedback.pop_info(title="Error", text=f"Login failed: {e}")
+        # # Ask for password
+        # password, ok2 = QtWidgets.QInputDialog.getText(
+        #     self.parent, "Login", "Password:", QtWidgets.QLineEdit.Password
+        # )
+        # print(password)
+        # if not ok2 or not password:
+        #     return
+
+        # try:
+        #     # Get the Tracktor handler
+        #     print("Available management handlers:", getattr(self.parent, "management_handlers", None))
+        #     handler = self.parent.management_connect("tracktor")
+
+        #     print(f'handlers: {handler}')
+            
+
+        #     if handler:
+        #         # Set username/password
+        #         handler.tracktor_username = username
+        #         handler.tracktor_password = password
+
+        #         # Call authenticate() to actually log in
+        #         api, msg = handler.authenticate()
+        #         print("authenticated with handler.authenticate()")
+        #         if not api or not handler.is_authenticated:
+        #             self.feedback.pop_info(title="Error", text=f"Login failed: {msg}")
+        #             return
+
+        #         # Success message
+        #         self.feedback.pop_info(title="Logged in", text="Logged into Tracktor")
+
+        # except Exception as e:
+        #     self.feedback.pop_info(title="Error", text=f"Login failed: {e}")
+        handler = self.parent.management_connect("tracktor")
+        print(f'handlers: {handler}')
+
+        if not handler:
+            return False
+
+        if not getattr(handler, "is_authenticated", False):
+            api, _msg = handler.authenticate()
+            print("authenticated with handler.authenticate()")
+            if not api or not handler.is_authenticated:
+                self.feedback.pop_info(title="Error", text=f"Login failed: {_msg}")
+                return
+            self.feedback.pop_info(title="Logged in", text="Logged in to Tracktor.")
+            return True
+        else:
+            self.feedback.pop_info(title="Logged in", text="Already logged in to Tracktor.")
+            return True
 
     def on_create_project_from_tracktor(self):
         """
