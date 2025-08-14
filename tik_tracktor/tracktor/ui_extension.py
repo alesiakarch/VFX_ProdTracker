@@ -68,47 +68,6 @@ class UiExtensions(ExtensionCore):
         """
         Logs the user into its Tracktor environment
         """
-        # # Ask for username
-        # username, ok1 = QtWidgets.QInputDialog.getText(
-        #     self.parent, "Login", "Username:"
-        # )
-        # print(username)
-        # if not ok1 or not username:
-        #     return
-
-        # # Ask for password
-        # password, ok2 = QtWidgets.QInputDialog.getText(
-        #     self.parent, "Login", "Password:", QtWidgets.QLineEdit.Password
-        # )
-        # print(password)
-        # if not ok2 or not password:
-        #     return
-
-        # try:
-        #     # Get the Tracktor handler
-        #     print("Available management handlers:", getattr(self.parent, "management_handlers", None))
-        #     handler = self.parent.management_connect("tracktor")
-
-        #     print(f'handlers: {handler}')
-            
-
-        #     if handler:
-        #         # Set username/password
-        #         handler.tracktor_username = username
-        #         handler.tracktor_password = password
-
-        #         # Call authenticate() to actually log in
-        #         api, msg = handler.authenticate()
-        #         print("authenticated with handler.authenticate()")
-        #         if not api or not handler.is_authenticated:
-        #             self.feedback.pop_info(title="Error", text=f"Login failed: {msg}")
-        #             return
-
-        #         # Success message
-        #         self.feedback.pop_info(title="Logged in", text="Logged into Tracktor")
-
-        # except Exception as e:
-        #     self.feedback.pop_info(title="Error", text=f"Login failed: {e}")
         handler = self.parent.management_connect("tracktor")
         print(f'handlers: {handler}')
 
@@ -159,12 +118,3 @@ class UiExtensions(ExtensionCore):
         """
         Logs out the user
         """
-
-        # SIGNALS
-        # login_action.triggered.connect(self.on_login)
-        # create_project_from_tracktor.triggered.connect(
-        #     self.on_create_project_from_tracktor
-        # )
-        # force_sync.triggered.connect(self.on_force_sync)
-        # # for some reason, lambda is needed...
-        # logout_action.triggered.connect(lambda: self.on_logout())

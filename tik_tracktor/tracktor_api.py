@@ -38,8 +38,11 @@ class TracktorAPI:
         self.password = None
         return True
 
+    def get_project(self, project_id):
+        return self.api_request("GET", f"/projects/{project_id}")
+    
     def get_projects(self):
-        return self.api_request("GET", "/projects")
+        return self.api_request("GET", f"/projects")
 
     def get_shots(self, project_id):
         return self.api_request("GET", f"/projects/{project_id}/shots")
