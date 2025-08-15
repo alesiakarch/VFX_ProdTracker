@@ -27,6 +27,16 @@ export function Popup({open, onClose, onSubmit, fields = []}) {
                     {fields.map(field => (
                         <div key={field.name} className="mb-3">
                             <label className="block mb-1 font-medium">{field.label}</label>
+                            {field.type === "textarea" ? (
+                                <textarea 
+                                    name={field.name}
+                                    value={data[field.name] || ""}
+                                    onChange={handleChange}
+                                    className="border rounded-lg px-2 py-1 w-full min-h-[80px]"
+                                    required={field.required}
+
+                                />
+                            ) : (
                                 <input
                                     type={field.type || "text"}
                                     name={field.name}
@@ -35,6 +45,8 @@ export function Popup({open, onClose, onSubmit, fields = []}) {
                                     className="border rounded px-2 py-1 w-full"
                                     required={field.required}
                                 />
+                            )}
+                                
                         </div>
                     ))}
                     <div className="flex gap=2 mt-2 justify-end">

@@ -10,8 +10,8 @@ import { Label } from "@headlessui/react";
 export function ProjectPage({ reloadProjects }) {
     const { projectId } = useParams()
     const [project, setProject] = useState()
-    const [shots, setShots] = useState()
-    const [assets, setAssets] = useState()
+    const [shots, setShots] = useState([])
+    const [assets, setAssets] = useState([])
     const [activeTab, setActiveTab] = useState("shots")
     const [popupOpen, setPopupOpen] = useState(false)
     const [popupFields, setPopupFields] = useState([])
@@ -77,7 +77,6 @@ export function ProjectPage({ reloadProjects }) {
         }
     }
 
-
     const handleCreateClick = () => {
         if (activeTab === "shots") {
             setPopupFields([
@@ -91,7 +90,6 @@ export function ProjectPage({ reloadProjects }) {
         }
         setPopupOpen(true)
     }
-
 
     const handlePopupSubmit = async (formData) => {
         try {
@@ -119,7 +117,19 @@ export function ProjectPage({ reloadProjects }) {
     if (project === null) return <div>Project not found</div>
 
     const shotColumns = [
-        { key: "shot_name", header: "Shot Name" },
+        { key: "shot_name", header: "Shot Name",
+            render: (value, row) => (
+                <span
+                    className="underline text-amber-700 cursor-pointer"
+                    role="button"
+                    tabIndex={0}
+                    onClick={() => navigate(`/projects/${projectId}/shots/${row.shot_id}`)}
+                    onKeyDown={e => (e.key === "Enter" || e.key === " ") && navigate(`/projects/${projectId}/shot/${row.shot_id}`)}
+                >
+                {value}
+
+                </span>
+            )},
         { key: "status", header: "Status", render: (value, row) => (
             <StatusListbox
                 value={value}
@@ -159,7 +169,19 @@ export function ProjectPage({ reloadProjects }) {
     ];
 
     const assetColumns = [
-        { key: "asset_name", header: "Asset Name" },
+        { key: "asset_name", header: "Asset Name",
+            render: (value, row) => (
+                <span
+                    className="underline text-amber-700 cursor-pointer"
+                    role="button"
+                    tabIndex={0}
+                    onClick={() => navigate(`/projects/${projectId}/assets/${row.asset_id}`)}
+                    onKeyDown={e => (e.key === "Enter" || e.key === " ") && navigate(`/projects/${projectId}/assets/${row.asset_id}`)}
+                >
+                {value}
+
+                </span>
+            )},
         { key: "asset_type", header: "Asset Type"},
         { key: "asset_status", header: "Status", render: (value, row) => (
             <StatusListbox
