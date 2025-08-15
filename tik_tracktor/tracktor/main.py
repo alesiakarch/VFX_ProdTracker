@@ -92,10 +92,6 @@ class ProductionPlatform(ManagementCore):
             raise Exception("Not authenticated")
         return self.api.get_projects()
 
-    def sync_project(self):
-        """This method is called when the project is synced."""
-        raise NotImplementedError("The method 'sync_project' must be implemented.")
-
     def force_sync(self):
         """This method is called when the project is forcefully synced."""
         raise NotImplementedError("The method 'force_sync' must be implemented.")
@@ -228,15 +224,69 @@ class ProductionPlatform(ManagementCore):
         )
         return shots_sub
     
-    def force_sync(self, project_id=None):
-        """
-        Sync Tik Manager project with Tracktor project.
-        - Add new assets/shots from Tracktor
-        - Remove assets/shots in Tik that no longer exist in Tracktor
-        - Update changed assets/shots
-        """
+    # def force_sync(self, project_id=None):
+    #     """
+    #     Force the sync of the project.
+
+    #     Args:
+    #         project_id (str, optional): The project ID to sync. If not provided,
+    #         attempts to get it from the project database. Defaults to None.
+
+    #     Raises:
+    #         Exception: If the project is not linked to the Tracktor project.    
+    #     """
+    #     sync_stamp = self.date_stamp()
+
+    #     project_id = project_id or self.tik_main.project.settings.get("host_project_id")
+    #     if not project_id:
+    #         LOG.error("Project is not linked to a Tracktor project.")
+    #         return False, "Project is not linked to a Tracktor project."
+
+    #     management_platform = self.tik_main.project.settings.get("management_platform")
+    #     if management_platform != "tracktor":
+    #         LOG.error("Project is not linked to a Tracktor project.")
+    #         return False, "Project is not linked to a Tracktor project."
+
+    #     # 1. Fetch current assets/shots from Tracktor
+    #     tracktor_assets = self.api.get_assets(project_id)
+    #     tracktor_shots = self.api.get_shots(project_id)
+    #     tracktor_asset_names = {asset["asset_name"] for asset in tracktor_assets}
+    #     tracktor_shot_names = {shot["shot_name"] for shot in tracktor_shots}
+
+    #     # 2. Fetch current assets/shots from Tik
+    #     assets_sub = self._get_assets_sub()
+    #     shots_sub = self._get_shots_sub()
+    #     tik_assets = assets_sub.tasks
+    #     tik_shots = shots_sub.tasks
+    #     tik_asset_names = set(tik_assets.keys())
+    #     tik_shot_names = set(tik_shots.keys())
+
+    #     # 3. Add new assets/shots from Tracktor
+    #     for asset in tracktor_assets:
+    #         if asset["asset_name"] not in tik_asset_names:
+    #             self._sync_new_asset(asset, assets_sub, self.asset_categories)
+    #     for shot in tracktor_shots:
+    #         if shot["shot_name"] not in tik_shot_names:
+    #             self._sync_new_shot(shot, shots_sub, self.shot_categories)
+
+    #     # 5. (Optional) Update changed assets/shots
+    #     # You can compare fields and update Tik if needed
+
+    #     self.tik_main.project.settings.edit_property("last_sync", sync_stamp)
+    #     self.tik_main.project.settings.apply_settings(force=True)
+
+    #     return True, "Success"
+
+    def force_sync(self):
+        return self.sync_project()
+    
+    def sync_project(self):
+        """Sync the project with Tracktor"""
+        
         sync_stamp = self.date_stamp()
-        project_id = project_id or self.tik_main.project.settings.get("host_project_id")
+
+        project_id = self.tik_main.project.settings.get("host_project_id")
+
         if not project_id:
             LOG.error("Project is not linked to a Tracktor project.")
             return False, "Project is not linked to a Tracktor project."
@@ -249,8 +299,8 @@ class ProductionPlatform(ManagementCore):
         # 1. Fetch current assets/shots from Tracktor
         tracktor_assets = self.api.get_assets(project_id)
         tracktor_shots = self.api.get_shots(project_id)
-        tracktor_asset_names = {a["asset_name"] for a in tracktor_assets}
-        tracktor_shot_names = {s["shot_name"] for s in tracktor_shots}
+        tracktor_asset_names = {asset["asset_name"] for asset in tracktor_assets}
+        tracktor_shot_names = {shot["shot_name"] for shot in tracktor_shots}
 
         # 2. Fetch current assets/shots from Tik
         assets_sub = self._get_assets_sub()
@@ -268,65 +318,9 @@ class ProductionPlatform(ManagementCore):
             if shot["shot_name"] not in tik_shot_names:
                 self._sync_new_shot(shot, shots_sub, self.shot_categories)
 
-        # 4. Remove assets/shots from Tik that no longer exist in Tracktor
-        for asset_name in tik_asset_names - tracktor_asset_names:
-            assets_sub.remove_task(asset_name)
-        for shot_name in tik_shot_names - tracktor_shot_names:
-            shots_sub.remove_task(shot_name)
-
         # 5. (Optional) Update changed assets/shots
         # You can compare fields and update Tik if needed
 
-        self.tik_main.project.settings.edit_property("last_sync", sync_stamp)
-        self.tik_main.project.settings.apply_settings(force=True)
-
-        return True, "Success"
-    
-    def sync_project(self):
-        """
-        Incrementally sync Tik Manager project with Tracktor project.
-        Only pulls changes (add/update/delete) since the last sync.
-        """
-        sync_stamp = self.date_stamp()
-        project_id = self.tik_main.project.settings.get("host_project_id")
-        if not project_id:
-            LOG.error("Project is not linked to a Tracktor project.")
-            return False, "Project is not linked to a Tracktor project."
-
-        management_platform = self.tik_main.project.settings.get("management_platform")
-        if management_platform != "tracktor":
-            LOG.error("Project is not linked to a Tracktor project.")
-            return False, "Project is not linked to a Tracktor project."
-
-        # 1. Get last sync time
-        last_sync = self.tik_main.project.settings.get("last_sync")
-        if not last_sync:
-            # If never synced, do a full force_sync
-            return self.force_sync(project_id)
-
-        # 2. Fetch only changed assets/shots from Tracktor since last_sync
-        # You need to implement these API endpoints in Tracktor!
-        changed_assets = self.api.get_assets_since(project_id, last_sync)
-        changed_shots = self.api.get_shots_since(project_id, last_sync)
-        deleted_assets = self.api.get_deleted_assets_since(project_id, last_sync)
-        deleted_shots = self.api.get_deleted_shots_since(project_id, last_sync)
-
-        assets_sub = self._get_assets_sub()
-        shots_sub = self._get_shots_sub()
-
-        # 3. Add or update changed assets/shots
-        for asset in changed_assets:
-            self._sync_new_asset(asset, assets_sub, self.asset_categories)
-        for shot in changed_shots:
-            self._sync_new_shot(shot, shots_sub, self.shot_categories)
-
-        # 4. Remove deleted assets/shots
-        for asset_name in deleted_assets:
-            assets_sub.remove_task(asset_name)
-        for shot_name in deleted_shots:
-            shots_sub.remove_task(shot_name)
-
-        # 5. Update sync timestamp
         self.tik_main.project.settings.edit_property("last_sync", sync_stamp)
         self.tik_main.project.settings.apply_settings(force=True)
 
