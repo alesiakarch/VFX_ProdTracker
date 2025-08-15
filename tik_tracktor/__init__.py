@@ -14,7 +14,9 @@ from tik_manager4.management.kitsu.ui_extension import UiExtensions as kitsu_ui_
 platforms["kitsu"] = kitsu_platform
 ui_extensions["kitsu"] = kitsu_ui_extension
 
-from tik_manager4.management.ui_tracktor.ui_tracktor import UiExtensions as tracktor_ui_extension
+from tik_manager4.management.tracktor.main import ProductionPlatform as tracktor_platform
+from tik_manager4.management.tracktor.ui_extension import UiExtensions as tracktor_ui_extension
+platforms["tracktor"] = tracktor_platform
 ui_extensions["tracktor"] = tracktor_ui_extension
 
 __all__ = ["platforms"]

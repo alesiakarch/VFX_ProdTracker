@@ -18,9 +18,9 @@ def get_tik_path():
     return tik_path
     
 
-def copy_plugin(path: Path):
+def copy_plugin_to_management(path: Path):
     """
-    Copies the plugin folders into respective TIK manager ones
+    Copies the tracktor folder into TIK/manager folder
     """
     src_folder = Path(__file__).parent / "tracktor"
     destination = tik_path / "management" / "tracktor"
@@ -30,6 +30,32 @@ def copy_plugin(path: Path):
     shutil.copytree(src_folder, destination)
     print(f"Copied '{src_folder}' to '{destination}'")
 
+def copy_init_to_management(path: Path):
+    """
+    Copies the __init__ into TIK/manager folder
+    """
+    init_file = Path(__file__).parent / "__init__.py"
+    destination = tik_path / "management"
+    destination.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(init_file, destination)
+    print(f"Copied {init_file} to {destination}")
+
+def copy_plugin_to_external(path: Path):
+    """
+    Copies tracktor_api.py to TIK/external folder
+    """
+
+    api_file = Path(__file__).parent / "tracktor_api.py"
+    destination = tik_path/ "external" / "tracktor"
+    destination.mkdir(parents=True, exist_ok=True)
+    destination_file = destination / "tracktor_api.py"
+    shutil.copy2(api_file, destination)
+    print(f"Copied {api_file} to {destination}")
+
+
+
 if __name__ == "__main__":
     tik_path = get_tik_path()
-    copy_plugin(tik_path)
+    copy_init_to_management(tik_path)
+    copy_plugin_to_management(tik_path)
+    copy_plugin_to_external(tik_path)
