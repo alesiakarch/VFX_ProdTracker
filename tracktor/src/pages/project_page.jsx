@@ -4,13 +4,17 @@ import axios from "axios";
 import { Button } from "../components/Button";
 import { StatusListbox } from "../components/StatusListbox";
 import { Table } from "../components/Table";
+import { Popup } from "../components/Popup";
+import { Label } from "@headlessui/react";
 
 export function ProjectPage({ reloadProjects }) {
     const { projectId } = useParams()
     const [project, setProject] = useState()
-    const [shots, setShots] = useState()
-    const [assets, setAssets] = useState()
+    const [shots, setShots] = useState([])
+    const [assets, setAssets] = useState([])
     const [activeTab, setActiveTab] = useState("shots")
+    const [popupOpen, setPopupOpen] = useState(false)
+    const [popupFields, setPopupFields] = useState([])
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -61,7 +65,7 @@ export function ProjectPage({ reloadProjects }) {
 
     const updateAssetField = async(asset_id, field, newStatus) => {
         try {
-            await axios.patch(`http://localhost:8080/api/projects/${projectId}/shots/${shot_id}`,
+            await axios.patch(`http://localhost:8080/api/projects/${projectId}/assets/${asset_id}`,
                  {status_item : field, value : newStatus})
             setAssets(assets =>
                 assets.map(asset =>
@@ -73,37 +77,59 @@ export function ProjectPage({ reloadProjects }) {
         }
     }
 
+    const handleCreateClick = () => {
+        if (activeTab === "shots") {
+            setPopupFields([
+                {name : "shot_name", label: "Shot Name", required: true}
+            ])
+        } else {
+            setPopupFields([
+                {name: "asset_name", label: "Asset Name", required: true},
+                {name: "asset_type", label: "Asset Type", required: true}
+            ])
+        }
+        setPopupOpen(true)
+    }
 
-    // const createNew = async () => {
-    //     try {
-    //         if (activeTab === "shots") {
-    //             const response = await axios.patch(`http://localhost:8080/api/projects/${projectId}/shots`, {
-    //                 // logic here
-    //                 shots_name : `shotnameCHANGE PLS`,
-    //                 shotsNum = 1
-    //             })
-    //             const newShot = response.data
-    //             setShots([...shots, newShot])
-    //         } else if (activeTab === "assets") {
-    //             const response = await axios.patch(`http://localhost:8080/api/projects/${projectId}/assets`. {
-    //                 // logic here
-    //                 asset_name : "asset name variable set by the user"
-    //                 asset_type : "asset type variable set by the user"
-    //             })
-    //             const newAsset = response.data
-    //             setAssets([...assets, newAsset])
-    //         } 
-    //     }   catch (error) {
-    //             alert(`Failed to create new ${activeTab === "shots" ? "shot" : "asset"}`)
-    //             }
-
-    // }
+    const handlePopupSubmit = async (formData) => {
+        try {
+            if (activeTab === "shots") {
+                const response = await axios.post(`http://localhost:8080/api/projects/${projectId}/create_shot`, {
+                    project_id: projectId,
+                    shot_name: formData.shot_name
+                })
+                setShots([...shots, response.data])
+            } else {
+                const response = await axios.post(`http://localhost:8080/api/projects/${projectId}/create_asset`, {
+                    project_id: projectId,
+                    asset_name: formData.asset_name,
+                    asset_type: formData.asset_type
+            });
+            setAssets([...assets, response.data]);
+            }
+            setPopupOpen(false)
+        } catch (error) {
+            alert("Failed to create item")
+        }
+    }
 
     if (project === undefined) return <div>Loading...</div>
     if (project === null) return <div>Project not found</div>
 
     const shotColumns = [
-        { key: "shot_name", header: "Shot Name" },
+        { key: "shot_name", header: "Shot Name",
+            render: (value, row) => (
+                <span
+                    className="underline text-amber-700 cursor-pointer"
+                    role="button"
+                    tabIndex={0}
+                    onClick={() => navigate(`/projects/${projectId}/shots/${row.shot_id}`)}
+                    onKeyDown={e => (e.key === "Enter" || e.key === " ") && navigate(`/projects/${projectId}/shot/${row.shot_id}`)}
+                >
+                {value}
+
+                </span>
+            )},
         { key: "status", header: "Status", render: (value, row) => (
             <StatusListbox
                 value={value}
@@ -143,35 +169,54 @@ export function ProjectPage({ reloadProjects }) {
     ];
 
     const assetColumns = [
-        { key: "asset_name", header: "Asset Name" },
-        { key: "status", header: "Status", render: (value, row) => (
+        { key: "asset_name", header: "Asset Name",
+            render: (value, row) => (
+                <span
+                    className="underline text-amber-700 cursor-pointer"
+                    role="button"
+                    tabIndex={0}
+                    onClick={() => navigate(`/projects/${projectId}/assets/${row.asset_id}`)}
+                    onKeyDown={e => (e.key === "Enter" || e.key === " ") && navigate(`/projects/${projectId}/assets/${row.asset_id}`)}
+                >
+                {value}
+
+                </span>
+            )},
+        { key: "asset_type", header: "Asset Type"},
+        { key: "asset_status", header: "Status", render: (value, row) => (
             <StatusListbox
                 value={value}
-                onChange={newStatus => updateShotField(row.shot_id, "status", newStatus)}
+                onChange={newStatus => updateAssetField(row.asset_id, "asset_status", newStatus)}
+            />
+        )},
+        { key: "prepro_status", header: "Pre-production", render: (value, row) => (
+            <StatusListbox
+                value={value}
+                onChange={newStatus => updateAssetField(row.asset_id, "prepro_status", newStatus)}
             />
         )},
         { key: "mod_status", header: "Modelling", render: (value, row) => (
             <StatusListbox
                 value={value}
-                onChange={newStatus => updateShotField(row.shot_id, "mod_status", newStatus)}
+                onChange={newStatus => updateAssetField(row.asset_id, "mod_status", newStatus)}
             />
         )},
         { key: "srf_status", header: "Surfacing", render: (value, row) => (
             <StatusListbox
                 value={value}
-                onChange={newStatus => updateShotField(row.shot_id, "srf_status", newStatus)}
+                onChange={newStatus => updateAssetField(row.asset_id, "srf_status", newStatus)}
             />
         )},
         { key: "cfx_status", header: "CFX", render: (value, row) => (
             <StatusListbox
                 value={value}
-                onChange={newStatus => updateShotField(row.shot_id, "cfx_status", newStatus)}
+                onChange={newStatus => updateAssetField(row.asset_id, "cfx_status", newStatus)}
             />
         )},
         { key: "lit_status", header: "Lighting", render: (value, row) => (
             <StatusListbox
                 value={value}
-                onChange={newStatus => updateShotField(row.shot_id, "lit_status", newStatus)}
+                onChange={newStatus => updateAssetField(row.asset_id, "lit_status", newStatus)}
             />
         )},
     ];
@@ -193,7 +238,7 @@ export function ProjectPage({ reloadProjects }) {
                 <h1 className="text-3xl font-extrabold mb-6 text-center text-amber-700 drop-shadow">Project: {project.name}</h1>         
                 <div className="mt-5 mb-5 text-left">
                     <Button className={`px-4 py-2 rounded-t bg-gray-100 text-amber-800`}
-                    //onClick={createNew}
+                    onClick={handleCreateClick}
                     title={`${activeTab === "assets" ? "New Asset" : "New Shot" }`}/>
                 </div>
                 {activeTab === "shots" && (
@@ -206,9 +251,10 @@ export function ProjectPage({ reloadProjects }) {
                         )}
                     </div>
                 )}
-
+                
                 {activeTab === "assets" && (
                      <div>
+                        {console.log("Assets:", assets)}
                         {assets && assets.length > 0 ? (
                         <Table columns={assetColumns} rows={assets} />
                         ) : (
@@ -223,6 +269,12 @@ export function ProjectPage({ reloadProjects }) {
                     <Button className="bg-amber-300 text-white mb-2 px-6 py-2 rounded mt-4" title={"Share project"} onClick={() => navigate(`/projects/${projectId}/share`)}/>
                 </div>
              </div>
+             <Popup
+                open={popupOpen}
+                onClose={() => setPopupOpen(false)}
+                onSubmit={handlePopupSubmit}
+                fields={popupFields}
+             />
         </div>
     )
 }

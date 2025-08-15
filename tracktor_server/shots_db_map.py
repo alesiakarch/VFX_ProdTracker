@@ -56,7 +56,10 @@ class ShotsDBMapper:
         Get shots to display on the project page
         """
         connection = self.get_db()
-        shot_rows = connection.execute("SELECT * FROM shots WHERE project_id = ?", (project_id,)).fetchall()
+        shot_rows = connection.execute("""
+                                        SELECT * FROM shots 
+                                        WHERE project_id = ?
+                                        ORDER BY CAST(SUBSTR(shot_name, 5) AS INTEGER)""", (project_id,)).fetchall()
         connection.close()
         return shot_rows
     
@@ -108,6 +111,38 @@ class ShotsDBMapper:
                             )
             connection.commit()
         connection.close()
+
+    def add_shot_for_project(self, project_id, shot_name):
+        """
+        Adds a single shot with a custom name to the project.
+        """
+        connection = self.get_db()
+        cursor = connection.cursor()
+        new_status = "Not Started"
+        cursor.execute("""
+                        INSERT INTO shots(
+                            project_id,
+                            shot_name,
+                            status,
+                            lay_status,
+                            anim_status,
+                            cfx_status,
+                            lit_status
+                        )
+                        VALUES (?, ?, ?, ?, ?, ?, ?)
+                        """, (
+                            project_id,
+                            shot_name,
+                            new_status,
+                            new_status,
+                            new_status,
+                            new_status,
+                            new_status
+                        ))
+        shot_id = cursor.lastrowid
+        connection.commit()
+        connection.close()
+        return shot_id
 
     def remove_shot_from_project(self, shot_id):
         """

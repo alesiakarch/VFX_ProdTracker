@@ -36,7 +36,7 @@ class AssetsDBMapper:
         connection = self.get_db()
         connection.execute("""
                                 CREATE TABLE IF NOT EXISTS assets(
-                                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                                asset_id INTEGER PRIMARY KEY AUTOINCREMENT,
                                 project_id INTEGER,
                                 asset_name TEXT NOT NULL,
                                 asset_type TEXT NOT NULL,
@@ -48,7 +48,7 @@ class AssetsDBMapper:
                                 lit_status TEXT NOT NULL,
                                 UNIQUE(asset_name)
                                 )
-                                """,
+                                """
                                 )
         connection.commit()
         connection.close()
@@ -98,7 +98,7 @@ class AssetsDBMapper:
         Get all columns of one asset from one project
         """
         connection = self.get_db()
-        row = connection.execute("SELECT * FROM assets WHERE project_id = ? AND id = ?", (project_id, asset_id)).fetchone()
+        row = connection.execute("SELECT * FROM assets WHERE project_id = ? AND asset_id = ?", (project_id, asset_id)).fetchone()
         connection.close()
         return row
     
@@ -127,6 +127,17 @@ class AssetsDBMapper:
         """
         connection = self.get_db()
         cursor = connection.cursor()
-        cursor.execute("DELETE FROM assets WHERE id=?", (asset_id,))
+        cursor.execute("DELETE FROM assets WHERE asset_id=?", (asset_id,))
         connection.commit()
         connection.close()
+
+    def change_asset_status(self, asset_id, status_item, new_status):
+        """
+        Changes the status of any dropdown status item, aka LAY, ANI, etc
+        """
+        connection = self.get_db()
+        cursor = connection.cursor()
+        cursor.execute(f"UPDATE assets SET {status_item} = ? WHERE asset_id = ?", (new_status, asset_id))
+        connection.commit()
+        connection.close()
+        
