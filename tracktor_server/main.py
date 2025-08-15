@@ -182,6 +182,10 @@ def join_project():
     usersProjects_table.add_assignment(user_id, project_id, "Member")
     return jsonify({"message": "Project joined!", "project_id": project_id})
 
+@app.route("/api/ping")
+def ping():
+    return jsonify({"message": "Tracktor API is reachable"})
+
 @app.route("/api/projects/<int:project_id>/create_asset", methods = ['POST'])
 def create_asset(project_id):
     data = request.get_json()
