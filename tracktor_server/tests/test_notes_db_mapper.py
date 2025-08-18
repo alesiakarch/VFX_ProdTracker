@@ -1,9 +1,9 @@
 import pytest
 import tempfile
 import os
-from tracktor_server.notes_db_map import NotesDBMapper
-from tracktor_server.projects_db_map import ProjectsDBMapper
-from tracktor_server.shots_db_map import ShotsDBMapper
+from tracktor_server.notes_table import NotesDBMapper
+from tracktor_server.projects_table import ProjectsDBMapper
+from tracktor_server.shots_table import ShotsDBMapper
 
 @pytest.fixture
 def projects_mapper():

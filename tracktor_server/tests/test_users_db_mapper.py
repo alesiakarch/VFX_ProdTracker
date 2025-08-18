@@ -2,7 +2,7 @@ import pytest
 import bcrypt
 import tempfile
 import os
-from tracktor_server.users_db_map import UsersDBMapper
+from tracktor_server.users_table import UsersDBMapper
 
 @pytest.fixture
 def db_mapper():

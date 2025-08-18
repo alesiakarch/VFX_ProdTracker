@@ -1,4 +1,7 @@
-"""UI Extension for Tracktor"""
+"""
+UI Extension for Tracktor.
+This file is based on the original integration of Kitsu and Shotgrid made by the TIK Manager team.
+"""
 
 from tik_manager4.ui.Qt import QtWidgets
 from tik_manager4.ui.dialog.feedback import Feedback
@@ -15,18 +18,35 @@ import requests
 
 
 class UiExtensions(ExtensionCore):
+    """
+    This class creates a UI extension for Tracktor plugin in TIK Manager. 
+    
+    It will update the TIK UI to include an extra "Tracktor" menu with buttons, relevant to plugin's functionality.
+
+    Attributes:
+        parent (QWidget): The parent widget for the extension.
+        feedback (Feedback): Feedback dialog handler for user messages (from TIK Manager).
+    """
     def __init__(self, parent):
+        """
+        Initializes the UI extension.
+
+        Args:
+            parent (QWidget): The parent widget for the extension.
+        """
         print("UiExtensions __init__ called")
         self.parent = parent
         self.feedback = Feedback(parent=self.parent)
 
     def build_ui(self):
         """Build the extension UI."""
+
         print("build_ui called")
         self.add_main_menu()
 
     def add_main_menu(self):
         """Add the extension commands to the main menu."""
+
         print("add_main_menu called")
         tracktor_menu = self.parent.menu_bar.addMenu("Tracktor")
 
@@ -52,6 +72,9 @@ class UiExtensions(ExtensionCore):
         check_connection_action.triggered.connect(lambda: self.on_check_connection())
 
     def on_check_connection(self):
+        """
+        Checks wether Tracktor API is reachable.
+        """
         print("Tracktor connection button clicked!") 
         try:
             response = requests.get("http://localhost:8080/api/ping", timeout=5)
@@ -66,7 +89,10 @@ class UiExtensions(ExtensionCore):
 
     def on_login(self):
         """
-        Logs the user into its Tracktor environment
+        Logs the user into the Tracktor environment.
+
+        Returns:
+            bool: True if login is successful or already logged in, False otherwise.
         """
         handler = self.parent.management_connect("tracktor")
         print(f'handlers: {handler}')
@@ -76,11 +102,11 @@ class UiExtensions(ExtensionCore):
 
         if not getattr(handler, "is_authenticated", False):
             api, _msg = handler.authenticate()
-            print("authenticated with handler.authenticate()")
+
             if not api or not handler.is_authenticated:
                 self.feedback.pop_info(title="Error", text=f"Login failed: {_msg}")
                 return
-            self.feedback.pop_info(title="Logged in", text="Logged in to Tracktor.")
+            self.feedback.pop_info(title="Logged in", text="Logged into Tracktor.")
             return True
         else:
             self.feedback.pop_info(title="Logged in", text="Already logged in to Tracktor.")
@@ -88,8 +114,9 @@ class UiExtensions(ExtensionCore):
 
     def on_create_project_from_tracktor(self):
         """
-        Pulls the project from tracktor and hold connection for updates
+        Pulls the project from Tracktor 
         """
+
         print("Create Project from Tracktor clicked")
         if not self.parent._pre_check(level=3):
             print("Pre-check failed")
@@ -137,7 +164,7 @@ class UiExtensions(ExtensionCore):
 
     def on_logout(self):
         """
-        Logs out from Tracktor
+        Logs out the user from Tracktor
         """
         handler = self.parent.management_connect("tracktor")
         handler.logout()

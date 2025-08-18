@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>ui_extension &#8212; Tracktor VFX 0.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=27fed22d" />
+    <script src="../_static/documentation_options.js?v=2709fde1"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="login" href="login.html" />
+    <link rel="prev" title="tracktor.main" href="main.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="module-tik_tracktor.tracktor.ui_extension">
+<span id="ui-extension"></span><h1>ui_extension<a class="headerlink" href="#module-tik_tracktor.tracktor.ui_extension" title="Link to this heading">¶</a></h1>
+<p>UI Extension for Tracktor.
+This file is based on the original integration of Kitsu and Shotgrid made by the TIK Manager team.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="tik_tracktor.tracktor.ui_extension.UiExtensions">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tik_tracktor.tracktor.ui_extension.</span></span><span class="sig-name descname"><span class="pre">UiExtensions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tik_tracktor.tracktor.ui_extension.UiExtensions" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ExtensionCore</span></code></p>
+<p>This class creates a UI extension for Tracktor plugin in TIK Manager.</p>
+<p>It will update the TIK UI to include an extra “Tracktor” menu with buttons, relevant to plugin’s functionality.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tik_tracktor.tracktor.ui_extension.UiExtensions.parent">
+<span class="sig-name descname"><span class="pre">parent</span></span><a class="headerlink" href="#tik_tracktor.tracktor.ui_extension.UiExtensions.parent" title="Link to this definition">¶</a></dt>
+<dd><p>The parent widget for the extension.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>QWidget</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tik_tracktor.tracktor.ui_extension.UiExtensions.feedback">
+<span class="sig-name descname"><span class="pre">feedback</span></span><a class="headerlink" href="#tik_tracktor.tracktor.ui_extension.UiExtensions.feedback" title="Link to this definition">¶</a></dt>
+<dd><p>Feedback dialog handler for user messages (from TIK Manager).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Feedback</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tik_tracktor.tracktor.ui_extension.UiExtensions.add_main_menu">
+<span class="sig-name descname"><span class="pre">add_main_menu</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tik_tracktor.tracktor.ui_extension.UiExtensions.add_main_menu" title="Link to this definition">¶</a></dt>
+<dd><p>Add the extension commands to the main menu.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tik_tracktor.tracktor.ui_extension.UiExtensions.build_ui">
+<span class="sig-name descname"><span class="pre">build_ui</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tik_tracktor.tracktor.ui_extension.UiExtensions.build_ui" title="Link to this definition">¶</a></dt>
+<dd><p>Build the extension UI.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tik_tracktor.tracktor.ui_extension.UiExtensions.on_check_connection">
+<span class="sig-name descname"><span class="pre">on_check_connection</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tik_tracktor.tracktor.ui_extension.UiExtensions.on_check_connection" title="Link to this definition">¶</a></dt>
+<dd><p>Checks wether Tracktor API is reachable.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tik_tracktor.tracktor.ui_extension.UiExtensions.on_create_project_from_tracktor">
+<span class="sig-name descname"><span class="pre">on_create_project_from_tracktor</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tik_tracktor.tracktor.ui_extension.UiExtensions.on_create_project_from_tracktor" title="Link to this definition">¶</a></dt>
+<dd><p>Pulls the project from Tracktor</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tik_tracktor.tracktor.ui_extension.UiExtensions.on_force_sync">
+<span class="sig-name descname"><span class="pre">on_force_sync</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tik_tracktor.tracktor.ui_extension.UiExtensions.on_force_sync" title="Link to this definition">¶</a></dt>
+<dd><p>Overwrites the TIK project with Tracktor project data</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tik_tracktor.tracktor.ui_extension.UiExtensions.on_login">
+<span class="sig-name descname"><span class="pre">on_login</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tik_tracktor.tracktor.ui_extension.UiExtensions.on_login" title="Link to this definition">¶</a></dt>
+<dd><p>Logs the user into the Tracktor environment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if login is successful or already logged in, False otherwise.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tik_tracktor.tracktor.ui_extension.UiExtensions.on_logout">
+<span class="sig-name descname"><span class="pre">on_logout</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tik_tracktor.tracktor.ui_extension.UiExtensions.on_logout" title="Link to this definition">¶</a></dt>
+<dd><p>Logs out the user from Tracktor</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Tracktor VFX</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">Usage</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">tik_tracktor</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="tracktor_api.html">tracktor_api</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installer.html">installer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="main.html">tracktor.main</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">ui_extension</a></li>
+<li class="toctree-l2"><a class="reference internal" href="login.html">login</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../tracktor_server/index.html">tracktor_server</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">tik_tracktor</a><ul>
+      <li>Previous: <a href="main.html" title="previous chapter">tracktor.main</a></li>
+      <li>Next: <a href="login.html" title="next chapter">login</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2025, Alesia Karchevskaia.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="../_sources/tik_tracktor/ui_extension.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

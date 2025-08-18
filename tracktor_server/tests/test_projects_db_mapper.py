@@ -1,7 +1,7 @@
 import pytest
 import tempfile
 import os
-from tracktor_server.projects_db_map import ProjectsDBMapper
+from tracktor_server.projects_table import ProjectsDBMapper
 
 @pytest.fixture
 def db_mapper():

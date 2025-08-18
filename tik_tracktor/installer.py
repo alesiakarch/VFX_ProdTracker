@@ -1,11 +1,24 @@
 #!/usr/bin/env -S uv run --script
+
+"""
+tik_tracktor.installer
+======================
+
+This module handles the installation and setup of the Tracktor system.
+
+"""
+
 import sys
 import shutil
 from pathlib import Path
 
 def get_tik_path():
     """
-    Fetches the installation path for TIK manager
+    Fetches the installation path for TIK manager. Default path is a windows installation at: C:\Program Files\TikWorks\tik_manager4
+    Alternatively the user is asked to input their path (if installed in different dir or on different OS).
+
+    Returns:
+        Path object of tik_manager4 dir.
     """
     default_path = r"C:\Program Files\TikWorks\tik_manager4"
     # linux path: "/home/s5221034/tik_manager4-4.4.1/tik_manager4/management"
@@ -21,6 +34,9 @@ def get_tik_path():
 def copy_plugin_to_management(path: Path):
     """
     Copies the tracktor folder into TIK/manager folder
+
+    Args:
+        path (Path): the root path to the TIK Manager installation (tik_manager4)
     """
     src_folder = Path(__file__).parent / "tracktor"
     destination = tik_path / "management" / "tracktor"
@@ -33,6 +49,9 @@ def copy_plugin_to_management(path: Path):
 def copy_init_to_management(path: Path):
     """
     Copies the __init__ into TIK/manager folder
+
+    Args:
+        path (Path): the root path to the TIK Manager installation (tik_manager4)
     """
     init_file = Path(__file__).parent / "__init__.py"
     destination = tik_path / "management"
@@ -43,6 +62,9 @@ def copy_init_to_management(path: Path):
 def copy_plugin_to_external(path: Path):
     """
     Copies tracktor_api.py to TIK/external folder
+
+    Args:
+        path (Path): the root path to the TIK Manager installation (tik_manager4)
     """
 
     api_file = Path(__file__).parent / "tracktor_api.py"
