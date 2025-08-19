@@ -1,8 +1,7 @@
 import axios from "axios"
-import { Button } from "../components/Button"   
-import { Textbox } from "../components/Textbox"
-import { useParams } from "react-router-dom"
 import { useState } from "react"
+import { Button } from "../components/Button"
+import { Textbox } from "../components/Textbox"
 
 
 export function JoinProjectPage() {

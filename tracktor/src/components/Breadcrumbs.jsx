@@ -1,5 +1,5 @@
-import { Link, useLocation } from "react-router-dom";
 import { ChevronsRight } from "lucide-react";
+import { Link, useLocation } from "react-router-dom";
 
 const validRoutes = [
   "/",

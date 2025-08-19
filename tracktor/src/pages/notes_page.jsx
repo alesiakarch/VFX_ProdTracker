@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react"
+import axios from "axios"
+import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import { Button } from "../components/Button"
 import { Popup } from "../components/Popup"
-import axios from "axios"
 
 
 export function NotesPage(){

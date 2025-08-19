@@ -1,11 +1,10 @@
-import { useState, useEffect, act } from "react";
-import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { Button } from "../components/Button";
+import { Popup } from "../components/Popup";
 import { StatusListbox } from "../components/StatusListbox";
 import { Table } from "../components/Table";
-import { Popup } from "../components/Popup";
-import { Label } from "@headlessui/react";
 
 export function ProjectPage({ reloadProjects }) {
     const { projectId, username } = useParams()

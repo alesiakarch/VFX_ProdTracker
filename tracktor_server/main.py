@@ -34,7 +34,7 @@ notes_table = Notes(db_path)
 @app.route("/init", methods = ['GET'])
 def init_db():
     """
-    Initialises all the tables in the database.
+    Initialise all the tables in the database.
 
     Returns:
         Response: JSON message confirming the init.
@@ -92,7 +92,7 @@ def existing_assignments():
     Gets all assignments from the db.
 
     Args:
-        user_id (int, optional) = The ID of the user to retrieve prjects for.
+        user_id (int, optional) = The ID of the user to retrieve projects for.
 
     Returns:
         Response: JSON list of assignment dicts if no user specified, 
