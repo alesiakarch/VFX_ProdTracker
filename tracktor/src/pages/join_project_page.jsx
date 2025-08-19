@@ -36,7 +36,7 @@ export function JoinProjectPage() {
                         value={sharecode}
                         onChange={(e) => setSharecode(e.target.value)}/>
                 </label>
-                <Button className="bg-amber-300 text-white px-4 py-2 rounded mt-2" title={"Add project"} onClick={JoinProject}/>
+                <Button className="bg-amber-300 text-amber-700 px-4 py-2 rounded mt-2" title={"Add project"} onClick={JoinProject}/>
                 {message && <div>{message}</div>}
             </div>                
         </div>

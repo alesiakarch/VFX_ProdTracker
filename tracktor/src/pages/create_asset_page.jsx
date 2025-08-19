@@ -53,7 +53,7 @@ export function CreateAssetPage() {
                     value={assetType}
                     onChange={(e) => setAssetType(e.target.value)}/>
                 </label>
-                <Button className="mb-2 bg-amber-300 text-white px-4 py-2 rounded mt-2"
+                <Button className="mb-2 bg-amber-300 text-amber-800 px-4 py-2 rounded mt-2"
                 title={"Create Asset"}
                 onClick={CreateAsset}/>
             </div>

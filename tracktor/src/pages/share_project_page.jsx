@@ -25,7 +25,7 @@ export function ShareProjectPage() {
             </h1>
             {sharecode && <h1 className="text-3xl font-extrabold mb-6 text-center text-amber-500 drop-shadow">
                 Sharecode: {sharecode}</h1>}
-            <Button className="bg-amber-300 text-white px-4 py-2 rounded mt-2" title={"Share project"} onClick={GenerateSharecode}/>
+            <Button className="bg-amber-300 text-amber-700 px-4 py-2 rounded mt-2" title={"Share project"} onClick={GenerateSharecode}/>
         </div>    
         </div>
     )

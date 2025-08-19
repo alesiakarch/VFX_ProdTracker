@@ -78,7 +78,7 @@ export function CreateProjectPage({projects, setProjects}) {
                      onChange={(e) => setProjectDeadline(e.target.value)}
                     />
                 </label>
-                 <Button className="mb-2 bg-amber-300 text-white px-4 py-2 rounded mt-2" title={"Create project!"} onClick={CreateProject}/>
+                 <Button className="mb-2 bg-amber-300 text-amber-700 px-4 py-2 rounded mt-2" title={"Create project!"} onClick={CreateProject}/>
                 
             </div>
 

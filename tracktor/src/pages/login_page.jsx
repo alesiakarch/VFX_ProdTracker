@@ -100,8 +100,8 @@ export function LoginPage() {
                 </label>
                 <br></br>
                     <div className="flex justify-center flex-row gap-3">
-                        <Button className="mb-2 bg-amber-300 text-white px-4 py-2 rounded" title={"Log in"} onClick={LoginUser}/>
-                        <Button className="mb-2 bg-amber-300 text-white px-4 py-2 rounded" title={"Sign up"} onClick={CreateUser}/>
+                        <Button className="mb-2 bg-amber-300 text-amber-800 px-4 py-2 rounded" title={"Log in"} onClick={LoginUser}/>
+                        <Button className="mb-2 bg-amber-300 text-amber-800 px-4 py-2 rounded" title={"Sign up"} onClick={CreateUser}/>
                     </div>
             </div>
         </div>

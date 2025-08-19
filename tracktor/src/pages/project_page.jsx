@@ -8,7 +8,7 @@ import { Popup } from "../components/Popup";
 import { Label } from "@headlessui/react";
 
 export function ProjectPage({ reloadProjects }) {
-    const { projectId } = useParams()
+    const { projectId, username } = useParams()
     const [project, setProject] = useState()
     const [shots, setShots] = useState([])
     const [assets, setAssets] = useState([])
@@ -116,6 +116,15 @@ export function ProjectPage({ reloadProjects }) {
     if (project === undefined) return <div>Loading...</div>
     if (project === null) return <div>Project not found</div>
 
+const statusColors = {
+  "Not started": "bg-gray-200 text-gray-700",
+  "WIP": "bg-blue-100 text-blue-700",
+  "Ready to Review": "bg-orange-200 text-amber-700",
+  "Complete": "bg-green-100 text-green-700",
+  "Omitted" : "bg-red-100 text-red-700",
+};
+
+
     const shotColumns = [
         { key: "shot_name", header: "Shot Name",
             render: (value, row) => (
@@ -123,8 +132,8 @@ export function ProjectPage({ reloadProjects }) {
                     className="underline text-amber-700 cursor-pointer"
                     role="button"
                     tabIndex={0}
-                    onClick={() => navigate(`/projects/${projectId}/shots/${row.id}`)}
-                    onKeyDown={e => (e.key === "Enter" || e.key === " ") && navigate(`/projects/${projectId}/shot/${row.id}`)}
+                    onClick={() => navigate(`/${username}/projects/${projectId}/shots/${row.id}`)}
+                    onKeyDown={e => (e.key === "Enter" || e.key === " ") && navigate(`/${username}/projects/${projectId}/shot/${row.id}`)}
                 >
                 {value}
 
@@ -134,36 +143,35 @@ export function ProjectPage({ reloadProjects }) {
             <StatusListbox
                 value={value}
                 onChange={newStatus => updateShotField(row.id, "status", newStatus)}
+                colourMap={statusColors}
             />
         )},
         { key: "lay_status", header: "Layout", render: (value, row) => (
             <StatusListbox
                 value={value}
                 onChange={newStatus => updateShotField(row.id, "lay_status", newStatus)}
+                colourMap={statusColors}
             />
         )},
         { key: "anim_status", header: "Animation", render: (value, row) => (
             <StatusListbox
                 value={value}
                 onChange={newStatus => updateShotField(row.id, "anim_status", newStatus)}
+                colourMap={statusColors}
             />
         )},
         { key: "cfx_status", header: "CFX", render: (value, row) => (
             <StatusListbox
                 value={value}
                 onChange={newStatus => updateShotField(row.id, "cfx_status", newStatus)}
+                colourMap={statusColors}
             />
         )},
         { key: "lit_status", header: "Lighting", render: (value, row) => (
             <StatusListbox
                 value={value}
                 onChange={newStatus => updateShotField(row.id, "lit_status", newStatus)}
-            />
-        )},
-        { key: "assets_status", header: "Assets", render: (value, row) => (
-            <StatusListbox
-                value={value}
-                onChange={newStatus => updateShotField(row.id, "assets_status", newStatus)}
+                colourMap={statusColors}
             />
         )},
     ];
@@ -175,8 +183,8 @@ export function ProjectPage({ reloadProjects }) {
                     className="underline text-amber-700 cursor-pointer"
                     role="button"
                     tabIndex={0}
-                    onClick={() => navigate(`/projects/${projectId}/assets/${row.id}`)}
-                    onKeyDown={e => (e.key === "Enter" || e.key === " ") && navigate(`/projects/${projectId}/assets/${row.id}`)}
+                    onClick={() => navigate(`/${username}/projects/${projectId}/assets/${row.id}`)}
+                    onKeyDown={e => (e.key === "Enter" || e.key === " ") && navigate(`/${username}/projects/${projectId}/assets/${row.id}`)}
                 >
                 {value}
 
@@ -187,36 +195,42 @@ export function ProjectPage({ reloadProjects }) {
             <StatusListbox
                 value={value}
                 onChange={newStatus => updateAssetField(row.id, "asset_status", newStatus)}
+                colourMap={statusColors}
             />
         )},
         { key: "prepro_status", header: "Pre-production", render: (value, row) => (
             <StatusListbox
                 value={value}
                 onChange={newStatus => updateAssetField(row.id, "prepro_status", newStatus)}
+                colourMap={statusColors}
             />
         )},
         { key: "mod_status", header: "Modelling", render: (value, row) => (
             <StatusListbox
                 value={value}
                 onChange={newStatus => updateAssetField(row.id, "mod_status", newStatus)}
+                colourMap={statusColors}
             />
         )},
         { key: "srf_status", header: "Surfacing", render: (value, row) => (
             <StatusListbox
                 value={value}
                 onChange={newStatus => updateAssetField(row.id, "srf_status", newStatus)}
+                colourMap={statusColors}
             />
         )},
         { key: "cfx_status", header: "CFX", render: (value, row) => (
             <StatusListbox
                 value={value}
                 onChange={newStatus => updateAssetField(row.id, "cfx_status", newStatus)}
+                colourMap={statusColors}
             />
         )},
         { key: "lit_status", header: "Lighting", render: (value, row) => (
             <StatusListbox
                 value={value}
                 onChange={newStatus => updateAssetField(row.id, "lit_status", newStatus)}
+                colourMap={statusColors}
             />
         )},
     ];

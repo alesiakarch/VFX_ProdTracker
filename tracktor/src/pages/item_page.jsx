@@ -4,7 +4,7 @@ import { Button } from "../components/Button"
 import axios from "axios"
 
 export function ItemPage(){
-    const {projectId, itemId, itemType} = useParams()
+    const {projectId, itemId, itemType, username} = useParams()
     const [item, setItem] = useState(null)
     const navigate = useNavigate()
     const [activeTab, setActiveTab] = useState("")
@@ -46,7 +46,7 @@ export function ItemPage(){
     }
 
     const handleStatusClick = (dept) => {
-        navigate(`/projects/${projectId}/${itemType}/${itemId}/${dept}/notes`)
+        navigate(`/${username}/projects/${projectId}/${itemType}/${itemId}/${dept}/notes`)
     }
     console.log("itemType:", itemType, "departments:", departments);
 
@@ -73,7 +73,7 @@ export function ItemPage(){
                 {activeTab && (
                     <div className="mb-4 text-left">
                         <Button
-                            className={"px-4 py-2 rounded-t bg-amber-300 text-white font-bold"}
+                            className={"px-4 py-2 rounded-t bg-amber-300 text-amber-700 font-bold"}
                             onClick={() => {handleStatusClick(activeTab)}}
                             title={`${activeTab.toUpperCase()} Notes`}
                         />

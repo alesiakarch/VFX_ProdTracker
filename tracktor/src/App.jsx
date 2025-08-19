@@ -41,11 +41,11 @@ function App() {
                     <Route path ="/:username/projects" element={<LandingPage projects={projects} reloadProjects={fetchData}/>}/>
                     <Route path="/" element={<LoginPage />} />
                     <Route path="/:username/create-project" element={<CreateProjectPage projects={projects} setProjects={setProjects}/>} />
-                    <Route path="/projects/:projectId" element={<ProjectPage />} />
-                    <Route path="/projects/:projectId/share" element={<ShareProjectPage/>} />
+                    <Route path="/:username/projects/:projectId" element={<ProjectPage />} />
+                    <Route path="/:username/projects/:projectId/share" element={<ShareProjectPage/>} />
                     <Route path="/:username/projects/join" element={<JoinProjectPage/>} />
-                    <Route path="/projects/:projectId/:itemType/:itemId" element={<ItemPage />}/>
-                    <Route path="/projects/:projectId/:itemType/:itemId/:itemDept/notes" element={<NotesPage />} />
+                    <Route path="/:username/projects/:projectId/:itemType/:itemId" element={<ItemPage />}/>
+                    <Route path="/:username/projects/:projectId/:itemType/:itemId/:itemDept/notes" element={<NotesPage />} />
                 </Route>
             </Routes>
         </Router>

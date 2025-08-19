@@ -28,11 +28,11 @@ export function LandingPage({ projects, reloadProjects }) {
                 <h1 className="text-3xl font-extrabold mb-6 text-center text-amber-700 drop-shadow">{username}'s Projects</h1>
                 <div className="flex justify-center flex-col gap-1">
                     {userProjects.map((project) => (
-                        <Button className = "bg-amber-300 text-white mb-2 px-6 py-2 rounded" key={project.id} title={project.name} onClick={() => navigate(`/projects/${project.id}`)}/>
+                        <Button className = "bg-amber-300 text-amber-800 mb-2 px-6 py-2 rounded" key={project.id} title={project.name} onClick={() => navigate(`/${username}/projects/${project.id}`)}/>
                     ))
                     }
-                    <Button className="bg-amber-300 text-white mb-2 px-6 py-2 rounded"title = {"Create new project"} onClick={() => navigate(`/${username}/create-project`)}/>
-                    <Button className="bg-amber-300 text-white mb-2 px-6 py-2 rounded" title = {"Add existing project"} onClick={() => navigate(`/${username}/projects/join`)}/>
+                    <Button className="bg-amber-300 text-amber-800 mb-2 px-6 py-2 rounded"title = {"Create new project"} onClick={() => navigate(`/${username}/create-project`)}/>
+                    <Button className="bg-amber-300 text-amber-800 mb-2 px-6 py-2 rounded" title = {"Add existing project"} onClick={() => navigate(`/${username}/projects/join`)}/>
                 </div>
             </div>
         </div>
