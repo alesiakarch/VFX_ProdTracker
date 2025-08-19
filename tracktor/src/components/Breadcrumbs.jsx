@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { ChevronRight } from "lucide-react";
+import { ChevronsRight } from "lucide-react";
 
 const validRoutes = [
   "/",
@@ -37,7 +37,7 @@ export default function Breadcrumbs() {
 
         return (
           <span key={to} className="flex items-center">
-            <ChevronRight size={14} className="mx-2 text-gray-400" />
+            <ChevronsRight size={14} className="mx-2 text-gray-400" />
             {isValid && !isLast ? (
               <Link to={to} className="hover:text-amber-700 transition-colors">
                 {label}
