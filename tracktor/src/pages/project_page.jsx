@@ -55,7 +55,7 @@ export function ProjectPage({ reloadProjects }) {
                  {status_item : field, value : newStatus})
             setShots(shots =>
                 shots.map(shot =>
-                    shot.shot_id === shot_id ? {...shot, [field] : newStatus} : shot
+                    shot.id === shot_id ? {...shot, [field] : newStatus} : shot
                 )
             )
         } catch (error) {
@@ -69,7 +69,7 @@ export function ProjectPage({ reloadProjects }) {
                  {status_item : field, value : newStatus})
             setAssets(assets =>
                 assets.map(asset =>
-                    asset.asset_id === asset_id ? {...asset, [field] : newStatus} : asset
+                    asset.id === asset_id ? {...asset, [field] : newStatus} : asset
                 )
             )
         } catch (error) {
@@ -123,8 +123,8 @@ export function ProjectPage({ reloadProjects }) {
                     className="underline text-amber-700 cursor-pointer"
                     role="button"
                     tabIndex={0}
-                    onClick={() => navigate(`/projects/${projectId}/shots/${row.shot_id}`)}
-                    onKeyDown={e => (e.key === "Enter" || e.key === " ") && navigate(`/projects/${projectId}/shot/${row.shot_id}`)}
+                    onClick={() => navigate(`/projects/${projectId}/shots/${row.id}`)}
+                    onKeyDown={e => (e.key === "Enter" || e.key === " ") && navigate(`/projects/${projectId}/shot/${row.id}`)}
                 >
                 {value}
 
@@ -133,37 +133,37 @@ export function ProjectPage({ reloadProjects }) {
         { key: "status", header: "Status", render: (value, row) => (
             <StatusListbox
                 value={value}
-                onChange={newStatus => updateShotField(row.shot_id, "status", newStatus)}
+                onChange={newStatus => updateShotField(row.id, "status", newStatus)}
             />
         )},
         { key: "lay_status", header: "Layout", render: (value, row) => (
             <StatusListbox
                 value={value}
-                onChange={newStatus => updateShotField(row.shot_id, "lay_status", newStatus)}
+                onChange={newStatus => updateShotField(row.id, "lay_status", newStatus)}
             />
         )},
         { key: "anim_status", header: "Animation", render: (value, row) => (
             <StatusListbox
                 value={value}
-                onChange={newStatus => updateShotField(row.shot_id, "anim_status", newStatus)}
+                onChange={newStatus => updateShotField(row.id, "anim_status", newStatus)}
             />
         )},
         { key: "cfx_status", header: "CFX", render: (value, row) => (
             <StatusListbox
                 value={value}
-                onChange={newStatus => updateShotField(row.shot_id, "cfx_status", newStatus)}
+                onChange={newStatus => updateShotField(row.id, "cfx_status", newStatus)}
             />
         )},
         { key: "lit_status", header: "Lighting", render: (value, row) => (
             <StatusListbox
                 value={value}
-                onChange={newStatus => updateShotField(row.shot_id, "lit_status", newStatus)}
+                onChange={newStatus => updateShotField(row.id, "lit_status", newStatus)}
             />
         )},
         { key: "assets_status", header: "Assets", render: (value, row) => (
             <StatusListbox
                 value={value}
-                onChange={newStatus => updateShotField(row.shot_id, "assets_status", newStatus)}
+                onChange={newStatus => updateShotField(row.id, "assets_status", newStatus)}
             />
         )},
     ];
@@ -175,8 +175,8 @@ export function ProjectPage({ reloadProjects }) {
                     className="underline text-amber-700 cursor-pointer"
                     role="button"
                     tabIndex={0}
-                    onClick={() => navigate(`/projects/${projectId}/assets/${row.asset_id}`)}
-                    onKeyDown={e => (e.key === "Enter" || e.key === " ") && navigate(`/projects/${projectId}/assets/${row.asset_id}`)}
+                    onClick={() => navigate(`/projects/${projectId}/assets/${row.id}`)}
+                    onKeyDown={e => (e.key === "Enter" || e.key === " ") && navigate(`/projects/${projectId}/assets/${row.id}`)}
                 >
                 {value}
 
@@ -186,37 +186,37 @@ export function ProjectPage({ reloadProjects }) {
         { key: "asset_status", header: "Status", render: (value, row) => (
             <StatusListbox
                 value={value}
-                onChange={newStatus => updateAssetField(row.asset_id, "asset_status", newStatus)}
+                onChange={newStatus => updateAssetField(row.id, "asset_status", newStatus)}
             />
         )},
         { key: "prepro_status", header: "Pre-production", render: (value, row) => (
             <StatusListbox
                 value={value}
-                onChange={newStatus => updateAssetField(row.asset_id, "prepro_status", newStatus)}
+                onChange={newStatus => updateAssetField(row.id, "prepro_status", newStatus)}
             />
         )},
         { key: "mod_status", header: "Modelling", render: (value, row) => (
             <StatusListbox
                 value={value}
-                onChange={newStatus => updateAssetField(row.asset_id, "mod_status", newStatus)}
+                onChange={newStatus => updateAssetField(row.id, "mod_status", newStatus)}
             />
         )},
         { key: "srf_status", header: "Surfacing", render: (value, row) => (
             <StatusListbox
                 value={value}
-                onChange={newStatus => updateAssetField(row.asset_id, "srf_status", newStatus)}
+                onChange={newStatus => updateAssetField(row.id, "srf_status", newStatus)}
             />
         )},
         { key: "cfx_status", header: "CFX", render: (value, row) => (
             <StatusListbox
                 value={value}
-                onChange={newStatus => updateAssetField(row.asset_id, "cfx_status", newStatus)}
+                onChange={newStatus => updateAssetField(row.id, "cfx_status", newStatus)}
             />
         )},
         { key: "lit_status", header: "Lighting", render: (value, row) => (
             <StatusListbox
                 value={value}
-                onChange={newStatus => updateAssetField(row.asset_id, "lit_status", newStatus)}
+                onChange={newStatus => updateAssetField(row.id, "lit_status", newStatus)}
             />
         )},
     ];

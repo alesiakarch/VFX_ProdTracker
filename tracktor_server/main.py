@@ -7,15 +7,16 @@ This is the Flask backend for the Tracktor VFX production tracker.
 The file contains endpoints to connect incoming requests to their respective functions and db access.
 
 """
+print("main.py loaded - FLATTENED IMPORTS")
 import os
 from flask import Flask, jsonify, request
 from flask_cors import CORS
-from tracktor_server.projects_table import Projects
-from tracktor_server.shots_table import Shots
-from tracktor_server.users_table import Users
-from tracktor_server.usersProjects_table import UsersProjects
-from tracktor_server.assets_table import Assets
-from tracktor_server.notes_table import Notes
+from projects_table import Projects
+from shots_table import Shots
+from users_table import Users
+from usersProjects_table import UsersProjects
+from assets_table import Assets
+from notes_table import Notes
 
 
 app = Flask(__name__)
@@ -502,4 +503,4 @@ def add_note(project_id, item_type, item_id, item_dept):
 if __name__ == "__main__":
     with app.app_context():
         init_db()
-    app.run(debug=True, port=8080)
+    app.run(host="0.0.0.0", port=8080)
