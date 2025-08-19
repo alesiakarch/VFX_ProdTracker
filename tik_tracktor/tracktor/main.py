@@ -268,12 +268,12 @@ class ProductionPlatform(ManagementCore):
         shot_id = shot_data["shot_id"]
         shot_name = shot_data["shot_name"]
         sub = shots_sub
-        sub.add_task(shot_name, categories=["LAY", "ANI", "CFX", "LIT"], uid=shot_id)
-        task = sub.tasks[shot_name]
+        
+        task = sub.add_task(shot_name, categories=["LAY", "ANI", "CFX", "LIT"], uid=shot_id)
+        print("DEBUG: sub.tasks keys after add_task:", list(sub.tasks.keys()))
+        # task = sub.tasks[shot_name]
         # Optionally, add more Tracktor fields as metadata:
-        task.edit_property("tracktor_status", shot_data["status"])
-        # ...add other fields as needed...
-        task.apply_settings(force=True)
+
         return task
     
     def _get_assets_sub(self):
@@ -353,6 +353,7 @@ class ProductionPlatform(ManagementCore):
             if asset["asset_name"] not in tik_asset_names:
                 self._sync_new_asset(asset, assets_sub, asset_categories)
         for shot in tracktor_shots:
+            print(["shot_name"])
             if shot["shot_name"] not in tik_shot_names:
                 self._sync_new_shot(shot, shots_sub, shot_categories)
 

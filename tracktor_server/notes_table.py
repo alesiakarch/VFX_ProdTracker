@@ -107,7 +107,7 @@ class Notes:
         """
         connection = self.get_db()
         notes_rows = connection.execute("SELECT * FROM notes WHERE item_type = ? AND item_id = ?", (item_type, item_id)).fetchall()
-        connection.close
+        connection.close()
         return notes_rows
     
     def get_all_notes(self):
@@ -155,4 +155,18 @@ class Notes:
         row = connection.execute("SELECT * FROM notes WHERE id = ?", (note_id,)).fetchone()
         connection.close()
         return row
+
+    def remove_notes(self, item_id):
+        """
+        Removes all the notes associated with the item_id.
+
+        Args:
+            item_id (int): The ID of the item (asset/shot) to select the notes from.
+
+        """
+
+        connection = self.get_db()
+        connection.execute("DELETE FROM notes WHERE item_id = ?", (item_id,))
+        connection.commit()
+        connection.close()
 

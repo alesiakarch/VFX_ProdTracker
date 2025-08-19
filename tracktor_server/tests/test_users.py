@@ -2,13 +2,13 @@ import pytest
 import bcrypt
 import tempfile
 import os
-from tracktor_server.users_table import UsersDBMapper
+from tracktor_server.users_table import Users
 
 @pytest.fixture
 def db_mapper():
     fd, path = tempfile.mkstemp(suffix=".sqlite")
     os.close(fd)
-    db_mapper = UsersDBMapper(path)
+    db_mapper = Users(path)
     db_mapper.db_name = path
     yield db_mapper
     os.remove(path)

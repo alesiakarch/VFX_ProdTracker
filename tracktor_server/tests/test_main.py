@@ -1,13 +1,19 @@
+import os
+import tempfile
 import pytest
 import json
 from tracktor_server.main import app
-from tracktor_server.db_map import DBMapper
 
 @pytest.fixture
 def client():
+    fd, path = tempfile.mkstemp(suffix=".sqlite")
+    os.close(fd)
+    os.environ["TRACKTOR_DB_PATH"] = path  # Set temp DB for this test run
     app.config['TESTING'] = True
     with app.test_client() as client:
         yield client
+    os.remove(path)
+    del os.environ["TRACKTOR_DB_PATH"]
 
 def test_init_db(client):
     # init the db
@@ -105,7 +111,7 @@ def test_change_status_success(client):
     shots_response = client.get(f'/api/projects/{project_id}/shots')
     shots = shots_response.get_json()
     assert len(shots) == 2
-    shot_id = shots[0]["shot_id"]
+    shot_id = shots[0]["id"]
     # run the test
     changes_data = {"status_item" : "anim_status",
                     "value" : "WIP"}

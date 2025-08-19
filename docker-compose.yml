@@ -1,0 +1,15 @@
+version: "3"
+services:
+  backend:
+    build: ./tracktor_server
+    volumes:
+      - ./tracktor_server/data:/app/data
+    ports:
+      - "8080:8080"
+
+  frontend:
+    build: ./tracktor
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend

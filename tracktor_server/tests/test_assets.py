@@ -1,14 +1,14 @@
 import pytest
 import tempfile
 import os
-from tracktor_server.assets_table import AssetsDBMapper
-from tracktor_server.projects_table import ProjectsDBMapper
+from tracktor_server.assets_table import Assets
+from tracktor_server.projects_table import Projects
 
 @pytest.fixture
 def projects_mapper():
     fd, path = tempfile.mkstemp(suffix=".sqlite")
     os.close(fd)
-    projects = ProjectsDBMapper(path)
+    projects = Projects(path)
     projects.init_project_table()
     yield projects
     os.remove(path)
@@ -16,7 +16,7 @@ def projects_mapper():
 @pytest.fixture
 def assets_mapper(projects_mapper):
     # Use the same db file as projects_mapper
-    assets = AssetsDBMapper(projects_mapper.db_name)
+    assets = Assets(projects_mapper.db_name)
     assets.init_assets_table()
     yield assets
 

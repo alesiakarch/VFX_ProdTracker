@@ -1,13 +1,13 @@
 import pytest
 import tempfile
 import os
-from tracktor_server.usersProjects_table import UsersProjectsDBMapper
+from tracktor_server.usersProjects_table import UsersProjects
 
 @pytest.fixture
 def db_mapper():
     fd, path = tempfile.mkstemp(suffix=".sqlite")
     os.close(fd)
-    db_mapper = UsersProjectsDBMapper(path)
+    db_mapper = UsersProjects(path)
     db_mapper.db_name = path
     yield db_mapper
     os.remove(path)

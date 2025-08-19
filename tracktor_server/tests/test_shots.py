@@ -1,15 +1,16 @@
 import pytest
 import tempfile
 import os
-from tracktor_server.shots_table import ShotsDBMapper
-from tracktor_server.projects_table import ProjectsDBMapper
+from tracktor_server.shots_table import Shots
+from tracktor_server.projects_table import Projects
 
 
 @pytest.fixture
 def projects_mapper():
     fd, path = tempfile.mkstemp(suffix=".sqlite")
+    print("TEST DB PATH:", path)
     os.close(fd)
-    projects = ProjectsDBMapper(path)
+    projects = Projects(path)
     projects.init_project_table()
     yield projects
     os.remove(path)
@@ -17,7 +18,7 @@ def projects_mapper():
 @pytest.fixture
 def shots_mapper(projects_mapper):
     # Use the same db file as projects_mapper
-    shots = ShotsDBMapper(projects_mapper.db_name)
+    shots = Shots(projects_mapper.db_name)
     shots.init_shots_table()
     yield shots
 
@@ -25,7 +26,7 @@ def test_init_shots_table(shots_mapper):
     shots_mapper.init_shots_table()
 
     expected_columns = [("project_id", "INTEGER"),
-                        ("shot_id", "INTEGER"),
+                        ("id", "INTEGER"),
                         ("shot_name", "TEXT"),
                         ("status", "TEXT"),
                         ("lay_status", "TEXT"),
@@ -175,7 +176,7 @@ def test_remove_shot_from_project(projects_mapper, shots_mapper):
     shots = shots_mapper.add_shots_for_project(new_id, shots_num)
     # Get the shot_id of the automatically created shot
     shots = shots_mapper.get_shots_from_project(new_id)
-    shot_id = shots[0]["shot_id"]
+    shot_id = shots[0]["id"]
 
     # delete project
     shots_mapper.remove_shot_from_project(shot_id)
@@ -194,7 +195,7 @@ def test_change_shot_status(projects_mapper, shots_mapper):
 
     # get the shot
     shot = shots_mapper.get_shots_from_project(project_id)[0]
-    shot_id = shot["shot_id"]
+    shot_id = shot["id"]
 
     # change status
     shots_mapper.change_shot_status(shot_id, "anim_status", "WIP")

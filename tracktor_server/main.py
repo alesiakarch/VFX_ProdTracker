@@ -7,7 +7,7 @@ This is the Flask backend for the Tracktor VFX production tracker.
 The file contains endpoints to connect incoming requests to their respective functions and db access.
 
 """
-
+import os
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 from tracktor_server.projects_table import Projects
@@ -17,10 +17,12 @@ from tracktor_server.usersProjects_table import UsersProjects
 from tracktor_server.assets_table import Assets
 from tracktor_server.notes_table import Notes
 
+
 app = Flask(__name__)
 cors = CORS(app, resources={r"/*": {"origins": "*"}}) # specify origins
 
-db_path = "tracktor.db"
+# Use TRACKTOR_DB_PATH env variable for test DB, default to 'tracktor.db' for production
+db_path = os.environ.get("TRACKTOR_DB_PATH", "tracktor.db")
 projects_table = Projects(db_path)
 shots_table = Shots(db_path)
 users_table = Users(db_path)
@@ -169,9 +171,17 @@ def delete_project(project_id):
         Response: JSON message confirming deletion.
     """
     projects_table.remove_project(project_id)
+    assets = assets_table.get_assets_from_project(project_id)
+    shots = shots_table.get_shots_from_project(project_id)
+
+    items = assets + shots
+    
+    for item in items:
+        notes_table.remove_notes(item["id"])
+    
     shots_table.remove_shots_from_project(project_id)
     assets_table.remove_assets_from_project(project_id)
-    #remove notes 
+
     return jsonify({"message": "Project deleted"}), 200
     
 @app.route("/api/projects/<int:project_id>", methods=['GET'])

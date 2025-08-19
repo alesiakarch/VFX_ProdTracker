@@ -47,7 +47,7 @@ class Shots:
         connection.execute("""
                                 CREATE TABLE IF NOT EXISTS shots(
                                 project_id INTEGER, 
-                                shot_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                                id INTEGER PRIMARY KEY AUTOINCREMENT,
                                 shot_name TEXT NOT NULL,
                                 status TEXT,
                                 lay_status TEXT,
@@ -90,7 +90,7 @@ class Shots:
             sqlite3.Row: The shot row, or None if not found.
         """
         connection = self.get_db()
-        row = connection.execute("SELECT * FROM shots WHERE project_id = ? AND shot_id = ?", (project_id, shot_id)).fetchone()
+        row = connection.execute("SELECT * FROM shots WHERE project_id = ? AND id = ?", (project_id, shot_id)).fetchone()
         connection.close()
         return row
     
@@ -190,7 +190,7 @@ class Shots:
         """
         connection = self.get_db()
         cursor = connection.cursor()
-        cursor.execute("DELETE FROM shots WHERE shot_id=?", (shot_id,))
+        cursor.execute("DELETE FROM shots WHERE id=?", (shot_id,))
         connection.commit()
         connection.close()
     
@@ -218,7 +218,7 @@ class Shots:
         """
         connection = self.get_db()
         cursor = connection.cursor()
-        cursor.execute(f"UPDATE shots SET {status_item} = ? WHERE shot_id = ?", (new_status, shot_id))
+        cursor.execute(f"UPDATE shots SET {status_item} = ? WHERE id = ?", (new_status, shot_id))
         connection.commit()
         connection.close()
         
