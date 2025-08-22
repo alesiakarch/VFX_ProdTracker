@@ -1,6 +1,3 @@
-# WIP VFX_ProdTracker
-Production tracking tool for VFX projects, supporting multiple users
-
 ## Requirements Document:
 
 This is going to be a short documents outlining the requirements for this project. 

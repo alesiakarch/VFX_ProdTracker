@@ -1,46 +1,50 @@
-# WIP VFX_ProdTracker
+# Tracktor VFX
 Production tracking tool for VFX projects, supporting multiple users
 
-## Requirements Document:
+## Supporting Documents:
 
-This is going to be a short documents outlining the requirements for this project. 
+A Requierment Document and a Design Document are available at the root of the repo.
 
-### Scope:
+## Installation:
 
-The aim of the project is to produce a basic production tracking tool. First and foremost, it should aid users in managing and tracking their shot work in a website like manner. 
-Hence, the project can be broken down into two main stages:
+### Prerequisites:
 
- - Stage 1: Standalone web-based production tracker, which can offer its basic functionality, but on a manual update basis. 
+Podman is requiered at this state to self-host the web app.
 
- - Stage 2: Full integration with the DCC tools, using TIK manager. This will allow for the web-app to directly work with the user's DCC and merge tracking directly with their work
+TIK Manager must be installed to use Tracktor plugin for TIK.
 
-MVP is defined as a complete Stage 1.  
+### Linux
 
-### Users:
+0. Ensure you have podman and podman-compose installed
+1. Download and extract the source code
+2. Navigate to the VFX_prodtracker directory in terminal (this directory will have docker-compose.yml in it)
+3. Run podman-compose up --build
+4. Wait until the build is done. If prompted to select an image, select: docker.io/vfx_prodtracker-main...
+5. Once the backend and front end are build and running, navigate to localhost:5173
 
-This project is aimed at small teams and individuals, working on CGI/film related products, that will benefit from shot-by-shot tracking. 
+Frontend: localhost:5173
+Backend: localhost:8080/api/users (valid url, check out the rest in the endpoints)
 
-### Requirements and functions:
+### Windows
 
-    Core functionality: 
-        The web app must give the user tools to track their project, which means:
-        1. Project creation/deletion cycle [x]
-        2. Specifying the metadata for the project, such as name, type, status, number of shots, etc []
-        3. Populating the project page (unique for each project) with said metadata and enabling it for editing by the user []
-        4. Manual editing of the shots and project status by the user. []
+0. Ensure you have podman and podman-compose installed
+1. Download and extract the source code
+2. Navigate to the VFX_prodtracker directory in terminal (this directory will have docker-compose.yml in it)
+3. Activate podman on windows with: podman machine start
+4. Run podman-compose up --build
+5. Wait until the build is done. If prompted to select an image, select: docker.io/vfx_prodtracker-main...
+6. Once the backend and front end are build and running, navigate to localhost:5173
 
-    Extended functionality:
-        This functions are expansions of the core, aimed to give the project bigger scope of use:
-        1. User login/sign up system
-        2. Storing only projects relevant for the user in the user's account 
-        3. Enabling sharing of the project by users between multiple users 
-        4. User permissions inside the project
+### TIK plugin
 
-    Post MVP nice-to-have's functionality:
-        This functions are quality of life improvement for the base application:
-        1. Better UI
-        2. Comment on each shot/asset/version
-        3. Individual version publishing with playblasts/thumbnails
+0. Ensure you have TIK manager installed - so far tested in Maya and Houdini only, but may be available in other DCCs.
+00. Note the tik_manager4/ installation directory
+1. Have a working build of Tracktors backend
+2. Download the tik_tracktor filed from source code
+3. Run ./installer.py from the terminal from tik_tracktor folder. Installed will prompt for a tik installation path, if it isn't a default windows one, and then copy the files where they are supposed to be.
+4. Open the DCC package and check for the Tracktor menu.
+5. Free to use!
+
 
 ### Tech stack:
 
@@ -52,6 +56,3 @@ This project is aimed at small teams and individuals, working on CGI/film relate
     SQLite
 
 
-some resoursees: 
-https://www.geeksforgeeks.org/python/flask-app-routing/
-https://reactrouter.com/api/hooks/useSearchParams

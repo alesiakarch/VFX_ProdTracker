@@ -265,7 +265,7 @@ class ProductionPlatform(ManagementCore):
             Task: The created Tik Manager task for the shot.
         """
 
-        shot_id = shot_data["shot_id"]
+        shot_id = shot_data["id"]
         shot_name = shot_data["shot_name"]
         sub = shots_sub
         

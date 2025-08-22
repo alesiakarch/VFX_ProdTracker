@@ -279,7 +279,7 @@ const statusColors = {
             
                 <div className="flex justify-center flex-row gap-1">
                     <Button className="bg-amber-300 text-white mb-2 px-6 py-2 rounded mt-4" title={"Delete project"} onClick={deleteProject}/>
-                    <Button className="bg-amber-300 text-white mb-2 px-6 py-2 rounded mt-4" title={"Share project"} onClick={() => navigate(`/projects/${projectId}/share`)}/>
+                    <Button className="bg-amber-300 text-white mb-2 px-6 py-2 rounded mt-4" title={"Share project"} onClick={() => navigate(`${username}/projects/${projectId}/share`)}/>
                 </div>
              </div>
              <Popup

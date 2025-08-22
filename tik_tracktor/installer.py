@@ -14,7 +14,7 @@ from pathlib import Path
 
 def get_tik_path():
     """
-    Fetches the installation path for TIK manager. Default path is a windows installation at: C:\Program Files\TikWorks\tik_manager4
+    Fetches the installation path for TIK manager. Default path is a windows installation at: C:\\Program Files\\TikWorks\\tik_manager4
     Alternatively the user is asked to input their path (if installed in different dir or on different OS).
 
     Returns:
